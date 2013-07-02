@@ -68,11 +68,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CobaltGame.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="startup.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="startup.cpp~" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CobaltGame.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

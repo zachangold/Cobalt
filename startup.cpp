@@ -1,128 +1,35 @@
 #include <iostream>
-using namespace std;
+#include "Window.h"
+#include "CobaltGame.h"
 
-#ifdef _WIN32
-#include <windows.h>
-
-#include <GL/gl.h>
-//#include <wgl.h>
-#include <GL/glu.h>
 #pragma comment( lib, "OpenGL32.Lib" )
 
+using namespace std;
 
-const char g_szClassName[] = "myWindowClass";
 
-// Step 4: the Window Procedure
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine, int nCmdShow )
 {
-    switch( msg )
-    {
-        case WM_CLOSE:
-            DestroyWindow(hwnd);
-        break;
-        case WM_DESTROY:
-            PostQuitMessage(0);
-        break;
-        default:
-            return DefWindowProc(hwnd, msg, wParam, lParam);
-    }
-    return 0;
-}
+	Window::hInstance = hInstance;
+	Window::hPrevInstance = hPrevInstance;
+	Window::lpCmdLine = lpCmdLine;
+	Window::nCmdShow = nCmdShow;
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-    LPSTR lpCmdLine, int nCmdShow)
-{
-    WNDCLASSEX wc;
-    HWND hwnd;
+	CobaltGame game;
+	game.main();
+
+
+	/*
     MSG msg;
-    HDC hdc;
 
-    //Step 1: Registering the Window Class
-    wc.cbSize        = sizeof(WNDCLASSEX);
-    wc.style         = CS_OWNDC;
-    wc.lpfnWndProc   = WndProc;
-    wc.cbClsExtra    = 0;
-    wc.cbWndExtra    = 0;
-    wc.hInstance     = hInstance;
-    wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
-    wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-    wc.lpszMenuName  = NULL;
-    wc.lpszClassName = g_szClassName;
-    wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
-
-    if(!RegisterClassEx(&wc))
+    while ( GetMessage( &msg, NULL, 0, 0 ) )
     {
-        MessageBox(NULL, "Window Registration Failed!", "Error!",
-            MB_ICONEXCLAMATION | MB_OK);
-        return 0;
-    }
-
-    // Step 2: Creating the Window
-    hwnd = CreateWindowEx(
-        WS_EX_CLIENTEDGE,
-        g_szClassName,
-        "The title of my window",
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, 240, 120,
-        NULL, NULL, hInstance, NULL);
-
-    if(hwnd == NULL)
-    {
-        MessageBox(NULL, "Window Creation Failed!", "Error!",
-            MB_ICONEXCLAMATION | MB_OK);
-        return 0;
-    }
-
-    hdc = GetDC( hwnd );
-
-    PIXELFORMATDESCRIPTOR pfd =
-    {
-        sizeof(PIXELFORMATDESCRIPTOR),
-        1,
-        PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    //Flags
-        PFD_TYPE_RGBA,            //The kind of framebuffer. RGBA or palette.
-        32,                        //Colordepth of the framebuffer.
-        0, 0, 0, 0, 0, 0,
-        0,
-        0,
-        0,
-        0, 0, 0, 0,
-        24,                        //Number of bits for the depthbuffer
-        8,                        //Number of bits for the stencilbuffer
-        0,                        //Number of Aux buffers in the framebuffer.
-        PFD_MAIN_PLANE,
-        0,
-        0, 0, 0
-    };
-
-    int pixelFormat = ChoosePixelFormat( hdc, &pfd );
-
-    SetPixelFormat( hdc, pixelFormat, &pfd );
-
-    HGLRC hglrc = wglCreateContext( hdc );
-
-    wglMakeCurrent( hdc, hglrc );
-
-    ShowWindow( hwnd, nCmdShow );
-    UpdateWindow( hwnd );
-
-    // Step 3: The Message Loop
-    while ( GetMessage( &msg, NULL, 0, 0 ) > 0 )
-    {
-		glClearColor( 1.0, 0.0, 1.0, 1.0 );
-		glClear( GL_COLOR_BUFFER_BIT );
-
         TranslateMessage( &msg );
         DispatchMessage( &msg );
-		SwapBuffers( hdc );
     }
 
-    wglMakeCurrent( hdc, NULL );
-    wglDeleteContext( hglrc );
-    ReleaseDC( hwnd, hdc );
     return msg.wParam;
-}
+	*/
+	return 1;
+};
 
-
-#endif /* _WIN32 */
