@@ -84,6 +84,11 @@ int Window::processMessages( void )
 	return 1;
 };
 
+HWND Window::getWindowHandle( void )
+{
+	return hwnd;		
+};
+
 void Window::setupWindowClass( void )
 {
 	if ( windowClassMade ) return;

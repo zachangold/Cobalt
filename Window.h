@@ -4,8 +4,10 @@
 #include <iostream>
 #include <windows.h>
 #include <GL/GL.h>
+#include <GL/GLU.h>
 using namespace std;
 
+class Input;
 
 /**
  * 
@@ -28,6 +30,9 @@ public:
 	// returns 0 if WM_QUIT is received, 1 otherwise
 	int processMessages( void );
 
+	HWND getWindowHandle( void );
+
+	// The user shouldn't change these
 	static HINSTANCE hInstance;
 	static HINSTANCE Window::hPrevInstance;
 	static LPSTR Window::lpCmdLine;
@@ -43,12 +48,9 @@ private:
 	static WNDCLASSEX wc;
 	static const string className;
 
-
 	HWND hwnd;
     HDC hdc;
 	HGLRC hglrc;
-
-
 };
 
 #endif /* WindowH */

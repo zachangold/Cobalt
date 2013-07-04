@@ -2,6 +2,7 @@
 #define CobaltGameH
 
 #include "Window.h"
+#include "Input.h"
 
 class CobaltGame
 {
@@ -13,7 +14,7 @@ public:
 
 private:
 	Window window;
-
+	Input input;
 };
 
 #endif /* CobaltGameH */
