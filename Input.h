@@ -3,6 +3,12 @@
 
 #include <dinput.h>
 
+#define DIMOUSE_LEFTBUTTON   0
+#define DIMOUSE_RIGHTBUTTON  1
+#define DIMOUSE_MIDDLEBUTTON 2
+#define DIMOUSE_4BUTTON      3
+#define DIMOUSE_5BUTTON      4
+
 class Window;
 
 class Input
@@ -16,12 +22,26 @@ public:
 
 	void update( void );
 	bool keyDown( int key );
+	bool buttonDown( int button );
 
+	float getRelX( void )
+	{
+		return float( mouseState.lX );// - prevMouseState.lX );
+	}
+	float getRelY( void )
+	{
+		return float( mouseState.lY );// - prevMouseState.lY );
+	};
+
+	float getSensitivity( void )
+	{
+		return sensitivity;
+	}
 
 private:
 	void initInput( void );
 	void initKeyboard( Window& window );
-	void initMouse( void );
+	void initMouse( Window& window );
 
 	void deleteInput( void );
 	void deleteKeyboard( void );
@@ -30,11 +50,18 @@ private:
 	void updateKeyboard( void );
 	void updateMouse( void );
 
+
 	LPDIRECTINPUT8 dInput;
-
 	LPDIRECTINPUTDEVICE8 keyboard;
-    char keys[ 256 ];
+	LPDIRECTINPUTDEVICE8 mouse;
 
+	char keyboardState[ 256 ];
+	DIMOUSESTATE2 mouseState;
+	DIMOUSESTATE2 prevMouseState; // Mouse state from previous update
+	bool invertedY;
+    float sensitivity;
+	float cursorX;
+    float cursorY;
 
 };
 

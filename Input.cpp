@@ -6,20 +6,22 @@
 
 Input::Input( void )
 {
-	dInput = NULL;
-	keyboard = NULL;
+	dInput = nullptr;
+	keyboard = nullptr;
+	mouse = nullptr;
+
+	sensitivity = 0.003;
 
 	initInput();
 };
 
 Input::Input( Window& window )
 {
-	dInput = NULL;
-	keyboard = NULL;
+	dInput = nullptr;
+	keyboard = nullptr;
+	mouse = nullptr;
 
-	initInput();
-	initKeyboard( window );
-	initMouse();
+	init( window );
 };
 
 
@@ -38,7 +40,7 @@ void Input::init( Window& window )
 
 	initInput();
 	initKeyboard( window );
-	initMouse();
+	initMouse( window );
 };
 
 void Input::update( void )
@@ -49,7 +51,12 @@ void Input::update( void )
 
 bool Input::keyDown( int key )
 {
-	return keys[ key ] & 0x80;
+	return keyboardState[ key ] & 0x80;
+};
+
+bool Input::buttonDown( int button )
+{
+	return mouseState.rgbButtons[ button ] & 0x80;
 };
 
 void Input::initInput( void )
@@ -87,42 +94,82 @@ void Input::initKeyboard( Window& window )
 	}
 };
 
-void Input::initMouse( void )
+void Input::initMouse( Window& window )
 {
-	
+	DIDEVCAPS mouseCapabilities;
+
+	if ( FAILED( dInput->CreateDevice( GUID_SysMouse, &mouse, NULL ) ) )
+	{
+		throw "Fatal Error: DirectInput Mouse init failed.";
+	}
+
+	if ( FAILED( mouse->SetDataFormat( &c_dfDIMouse2 ) ) )
+	{
+		throw "Fatal Error: could not set mouse data format";
+	}
+
+	if ( FAILED( mouse->SetCooperativeLevel( window.getWindowHandle(), DISCL_BACKGROUND | DISCL_NONEXCLUSIVE ) ) )
+	{
+		throw "Fatal Error: mouse cooperative level could not be set.";
+	}
+
+	if ( FAILED( mouse->Acquire() ) )
+	{
+		throw "Fatal Error: mouse could not be acquired.";
+	}
+
+	mouseCapabilities.dwSize = sizeof( mouseCapabilities );
+	mouse->GetCapabilities( &mouseCapabilities );
+
+	if ( !( mouseCapabilities.dwFlags & DIDC_ATTACHED ) )
+	{
+		throw "Fatal Error: Mouse not attached?";
+	}
 };
 
 
 void Input::deleteInput( void )
 {
-	if ( dInput != NULL )
+	if ( dInput != nullptr )
 	{
 		dInput->Release();
-		dInput = NULL;
+		dInput = nullptr;
 	}
 };
 
 void Input::deleteKeyboard( void )
 {
-	if ( keyboard != NULL )
+	if ( keyboard != nullptr )
 	{
 		keyboard->Unacquire();
 		keyboard->Release();
-		keyboard = NULL;
+		keyboard = nullptr;
 	}
 };
 
 void Input::deleteMouse( void )
 {
-
+	if ( mouse != nullptr )
+	{
+		mouse->Unacquire();
+		mouse->Release();
+		mouse = nullptr;
+	}
 };
 
 void Input::updateKeyboard( void )
 {
-	keyboard->GetDeviceState( 256, ( void * ) &keys );
+	keyboard->GetDeviceState( 256, ( void * ) &keyboardState );
 };
 
 void Input::updateMouse( void )
 {
+	memcpy( &prevMouseState, &mouseState, sizeof( DIMOUSESTATE2 ) );
 
+	if ( DIERR_INPUTLOST == mouse->GetDeviceState( sizeof( mouseState ), ( void * ) &mouseState ) )
+	{
+		mouse->Acquire();
+	}
+
+	SetCursorPos( 840, 525 );
 };

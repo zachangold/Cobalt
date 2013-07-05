@@ -27,11 +27,11 @@ Window::~Window( void )
 void Window::open( string title )
 {
     hwnd = CreateWindowEx(
-        WS_EX_CLIENTEDGE,
+        0,
         className.c_str(),
         title.c_str(),
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
+        0,
+        CW_USEDEFAULT, CW_USEDEFAULT, 1680, 1050,
         NULL, NULL, hInstance, NULL );
 
     if ( hwnd == NULL )
@@ -41,6 +41,9 @@ void Window::open( string title )
 		throw "Error: window cannot be opened.";
     }
 
+	SetWindowPos( hwnd, HWND_TOP, 0, 0, GetSystemMetrics( SM_CXSCREEN ), GetSystemMetrics( SM_CYSCREEN ), SWP_FRAMECHANGED );
+	SetWindowLong( hwnd, GWL_STYLE, 0 );
+	//SetCursor( NULL );
     ShowWindow( hwnd, nCmdShow );
 };
 
@@ -53,6 +56,7 @@ void Window::setupOpenGL( void )
 	hglrc = wglCreateContext( hdc );
 
 	makeCurrent();
+	glViewport( 0, 0, 1680, 1050 );
     UpdateWindow( hwnd );
 };
 
@@ -128,6 +132,9 @@ LRESULT CALLBACK Window::WndProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
         case WM_DESTROY:
             PostQuitMessage( 0 );
         break;
+		case WM_SETCURSOR:
+			SetCursor( NULL );
+			return TRUE;
         default:
             return DefWindowProc( hwnd, msg, wParam, lParam );
     }

@@ -20,32 +20,80 @@ void CobaltGame::main( void )
 	
 	input.init( window );
 
-	float x = 100.0;
-	float y = 100.0;
+	float x = 0.0;
+	float y = 0.0;
+	float z = -3.0;
+	float rot = 0.0;
 
-	glViewport( 0, 0, 800, 600 );
-	glOrtho( 0, 800, 600, 0, 0.0, 1.0 );
+
 
 	while ( true )
 	{
 		if ( !window.processMessages() ) break;
 		input.update();
-		
-		if ( input.keyDown( DIK_LEFT ) )	x -= 0.1;
-		if ( input.keyDown( DIK_RIGHT ) )	x += 0.1;
-		if ( input.keyDown( DIK_UP ) )		y -= 0.1;
-		if ( input.keyDown( DIK_DOWN ) )	y += 0.1;
+
+		camera.update( input );
+
+		glMatrixMode( GL_PROJECTION );
+		glLoadIdentity();
+		gluPerspective( 60.0, 4.0/3.0, 0.1, 100.0 );
+		camera.transform();
+		glMatrixMode( GL_MODELVIEW );
+
 		
 		glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 		glClear( GL_COLOR_BUFFER_BIT );
 
 		glColor3f( 1.0f, 1.0f, 1.0f );
 		glPointSize( 2.0f );
-		glBegin( GL_POINTS );
-			glVertex3f( x - 5, y - 5, 0 );
-			glVertex3f( x - 5, y + 5, 0 );
-			glVertex3f( x + 5, y + 5, 0 );
-			glVertex3f( x + 5, y - 5, 0 );
+
+		glLoadIdentity();
+		glTranslatef( x, y, z );
+		glRotatef( rot, 0, 0, 1.0 );
+
+		glScalef( 0.1f, 0.1f, 0.1f );
+
+		// Draw a wireframe cube
+		glBegin( GL_LINES );
+			// Front face
+			glVertex3f( -5.0f, -5.0f, -5.0f );
+			glVertex3f( -5.0f, +5.0f, -5.0f );
+
+			glVertex3f( -5.0f, +5.0f, -5.0f );
+			glVertex3f( +5.0f, +5.0f, -5.0f );
+
+			glVertex3f( +5.0f, +5.0f, -5.0f );
+			glVertex3f( +5.0f, -5.0f, -5.0f );
+
+			glVertex3f( +5.0f, -5.0f, -5.0f );
+			glVertex3f( -5.0f, -5.0f, -5.0f );
+
+			// Back Face
+			glVertex3f( -5.0f, -5.0f, +5.0f );
+			glVertex3f( -5.0f, +5.0f, +5.0f );
+
+			glVertex3f( -5.0f, +5.0f, +5.0f );
+			glVertex3f( +5.0f, +5.0f, +5.0f );
+
+			glVertex3f( +5.0f, +5.0f, +5.0f );
+			glVertex3f( +5.0f, -5.0f, +5.0f );
+
+			glVertex3f( +5.0f, -5.0f, +5.0f );
+			glVertex3f( -5.0f, -5.0f, +5.0f );
+
+			// Connection between front & back
+			glVertex3f( -5.0f, -5.0f, -5.0f );
+			glVertex3f( -5.0f, -5.0f, +5.0f );
+
+			glVertex3f( -5.0f, +5.0f, -5.0f );
+			glVertex3f( -5.0f, +5.0f, +5.0f );
+
+			glVertex3f( +5.0f, -5.0f, -5.0f );
+			glVertex3f( +5.0f, -5.0f, +5.0f );
+
+			glVertex3f( +5.0f, +5.0f, -5.0f );
+			glVertex3f( +5.0f, +5.0f, +5.0f );
+
 		glEnd();
 
 		window.swapGLBuffers();
