@@ -15,8 +15,15 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	Window::lpCmdLine = lpCmdLine;
 	Window::nCmdShow = nCmdShow;
 
-	CobaltGame game;
-	game.main();
+	try
+	{
+		CobaltGame game;
+		game.main();
+	} 
+	catch ( ... )
+	{
+		return 0;
+	}
 
 	return 1;
 };

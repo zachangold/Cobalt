@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Input.h"
 #include "Camera.h"
+#include "Video.h"
 
 class CobaltGame
 {
@@ -15,7 +16,9 @@ public:
 
 private:
 	Window window;
-	Camera camera;
+	//Camera camera;
+	Video video;
+	Model model;
 	Input input;
 };
 

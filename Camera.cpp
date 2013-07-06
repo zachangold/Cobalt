@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include <math.h>
 #include <gl/GL.h>
+#include <gl/GLU.h>
 
 Camera::Camera( void )
 {
@@ -32,6 +33,12 @@ Camera::~Camera( void )
 
 void Camera::transform( void )
 {
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
+	gluPerspective( 60.0, 4.0/3.0, 0.1, 100.0 );
+	
+	glMatrixMode( GL_MODELVIEW );
+	glLoadIdentity();
 	glRotatef( pitch * 180.0 / 3.14159, 1.0, 0.0, 0.0 );
 	glRotatef(   yaw * 180.0 / 3.14159, 0.0, 1.0, 0.0 );
 	glRotatef(  roll * 180.0 / 3.14159, 0.0, 0.0, 1.0 );
