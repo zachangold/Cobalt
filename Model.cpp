@@ -4,8 +4,6 @@
 #include "Video.h"
 //#include <gl/GL.h>
 //#include <gl/GLU.h>
-#include "glut/Include/GL/glut.h"
-#include "glext.h"
 
 Model::Model( void )
 {
@@ -15,7 +13,7 @@ Model::Model( void )
 
 Model::~Model( void )
 {
-	glDeleteBuffersARB( 1, &glvbo );
+
 };
 
 
@@ -51,8 +49,5 @@ void Model::loadRAW( string fileName )
 	input.close();
 
 	// generate the vertex buffer object
-	glGenBuffersARB( 1, &glvbo );
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, glvbo );
-	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof( Vertex ) * vertices.size(), &vertices[ 0 ], GL_STATIC_DRAW_ARB );
-
+	vBuffer.load( ( float* ) &vertices[ 0 ], vertices.size(), sizeof( Vertex ) );
 };

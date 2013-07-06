@@ -67,6 +67,7 @@ void Video::render( void )
 	 * STRESS NO BUFFER - ~15 fps
 	 */
 
+	// Testing code:
 #ifdef STRESS_TEST
 	const int CUBE_SIDE = 5;
 	for ( int x = 0; x < CUBE_SIDE; ++x )
@@ -87,11 +88,7 @@ void Video::render( void )
 		}
 	glEnd();
 #else
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, model->glvbo );
-	glEnableClientState( GL_VERTEX_ARRAY );
-	glVertexPointer( 3, GL_FLOAT, 0, 0 );
-	glDrawArrays( GL_TRIANGLES, 0, model->getVertices().size() );
-	glDisableClientState( GL_VERTEX_ARRAY );
+	model->getVBO().draw();
 #endif	
 #ifdef STRESS_TEST
 				glPopMatrix();

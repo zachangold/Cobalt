@@ -5,8 +5,8 @@
 #include <vector>
 using namespace std;
 
-#include "glut/Include/GL/glut.h"
-#include "glext.h"
+#include "VertexBuffer.h"
+
 typedef struct
 {
 	float x, y, z;
@@ -24,12 +24,16 @@ public:
 		return vertices;
 	};
 
-	GLuint glvbo;
+	VertexBuffer& getVBO( void )
+	{
+		return vBuffer;
+	};
+
 private:
 	void loadRAW( string fileName );
 
 	vector< Vertex > vertices;
-
+	VertexBuffer vBuffer;
 };
 
 #endif /* ModelH */
