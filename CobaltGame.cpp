@@ -17,6 +17,7 @@ void CobaltGame::main( void )
 {
 	window.open( "Cobalt" );
 	window.setupOpenGL();
+	video.init();
 	
 	model.load( "mat/monkHiRes.raw" );
 	video.model = &model;

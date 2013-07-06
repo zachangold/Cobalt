@@ -5,6 +5,8 @@
 #include <vector>
 using namespace std;
 
+#include "glut/Include/GL/glut.h"
+#include "glext.h"
 typedef struct
 {
 	float x, y, z;
@@ -22,10 +24,12 @@ public:
 		return vertices;
 	};
 
+	GLuint glvbo;
 private:
 	void loadRAW( string fileName );
 
 	vector< Vertex > vertices;
+
 };
 
 #endif /* ModelH */

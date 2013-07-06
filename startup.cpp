@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Window.h"
 #include "CobaltGame.h"
+#include "Video.h"
 
 #pragma comment( lib, "OpenGL32.Lib" )
 #pragma comment( lib, "glu32.lib" )
