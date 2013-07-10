@@ -19,6 +19,12 @@
     <Filter Include="Header Files\Video">
       <UniqueIdentifier>{33f7fff4-b7d3-48c3-a04a-08836255a6f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Video\Picture">
+      <UniqueIdentifier>{50682e61-6492-4842-897e-45733647496f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Video\Model">
+      <UniqueIdentifier>{867002b7-e9d3-407d-b56d-53798153d5bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="startup.cpp">
@@ -45,6 +51,15 @@
     <ClCompile Include="VertexBuffer.cpp">
       <Filter>Source Files\Video</Filter>
     </ClCompile>
+    <ClCompile Include="Picture.cpp">
+      <Filter>Source Files\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CobaltGame.h">
@@ -67,6 +82,21 @@
     </ClInclude>
     <ClInclude Include="VertexBuffer.h">
       <Filter>Header Files\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="Picture.h">
+      <Filter>Header Files\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="BMP.h">
+      <Filter>Header Files\Video\Picture</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PCX.h">
+      <Filter>Header Files\Video\Picture</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

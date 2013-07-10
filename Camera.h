@@ -8,8 +8,8 @@ class Camera
 public:
 	typedef enum
 	{
-		GHOST = 1,
-		FIXED, // Fixed to some entity (not usable atm)
+		GHOST = 1,	// Fly around the map freely
+		FIXED,		// Fixed to some entity (not usable atm)
 		THIRDPERSON // Fixed to rotate around some entity (not usable atm)
 	} Mode;
 

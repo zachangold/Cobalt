@@ -1,6 +1,9 @@
 #ifndef VertexBufferH
 #define VertexBufferH
 
+#include <iostream>
+using namespace std;
+
 #include "glut/Include/GL/glut.h"
 #include "glext.h"
 
@@ -29,28 +32,15 @@ public:
 	VertexBuffer( void );
 	~VertexBuffer( void );
 
-	void load( float *vertexData, int nVertices, int vertexSize )
-	{
-		this->nVertices = nVertices;
-
-		glGenBuffersARB( 1, &vbId );
-		glBindBufferARB( GL_ARRAY_BUFFER_ARB, vbId );
-		glBufferDataARB( GL_ARRAY_BUFFER_ARB, nVertices * vertexSize, vertexData, GL_STATIC_DRAW_ARB );
-	};
-
-	void draw( void )
-	{
-		glBindBufferARB( GL_ARRAY_BUFFER_ARB, vbId );
-		glEnableClientState( GL_VERTEX_ARRAY );
-		glVertexPointer( 3, GL_FLOAT, 0, 0 );
-		glDrawArrays( GL_TRIANGLES, 0, nVertices );
-		glDisableClientState( GL_VERTEX_ARRAY );
-	};
+	void load( float *data, int nVertices, int vertexSize );
+	void setFormat( GLuint format ) { this->format = format; };
+	void draw( void );
 
 private:
 	GLuint vbId;
 	int nVertices;
 
+	GLuint format;
 };
 
 #endif /* VertexBufferH */

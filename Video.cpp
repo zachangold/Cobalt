@@ -33,30 +33,34 @@ Video::~Video( void )
 void Video::init( void )
 {
     // get pointers to GL functions
-    glGenBuffersARB = (PFNGLGENBUFFERSARBPROC)wglGetProcAddress("glGenBuffersARB");
-    glBindBufferARB = (PFNGLBINDBUFFERARBPROC)wglGetProcAddress("glBindBufferARB");
-    glBufferDataARB = (PFNGLBUFFERDATAARBPROC)wglGetProcAddress("glBufferDataARB");
-    glBufferSubDataARB = (PFNGLBUFFERSUBDATAARBPROC)wglGetProcAddress("glBufferSubDataARB");
-    glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)wglGetProcAddress("glDeleteBuffersARB");
-    glGetBufferParameterivARB = (PFNGLGETBUFFERPARAMETERIVARBPROC)wglGetProcAddress("glGetBufferParameterivARB");
-    glMapBufferARB = (PFNGLMAPBUFFERARBPROC)wglGetProcAddress("glMapBufferARB");
-    glUnmapBufferARB = (PFNGLUNMAPBUFFERARBPROC)wglGetProcAddress("glUnmapBufferARB");
+    glGenBuffersARB = ( PFNGLGENBUFFERSARBPROC ) wglGetProcAddress( "glGenBuffersARB" );
+    glBindBufferARB = ( PFNGLBINDBUFFERARBPROC ) wglGetProcAddress( "glBindBufferARB" );
+    glBufferDataARB = ( PFNGLBUFFERDATAARBPROC ) wglGetProcAddress( "glBufferDataARB" );
+    glBufferSubDataARB = ( PFNGLBUFFERSUBDATAARBPROC ) wglGetProcAddress( "glBufferSubDataARB" );
+    glDeleteBuffersARB = ( PFNGLDELETEBUFFERSARBPROC ) wglGetProcAddress( "glDeleteBuffersARB" );
+    glGetBufferParameterivARB = ( PFNGLGETBUFFERPARAMETERIVARBPROC ) wglGetProcAddress( "glGetBufferParameterivARB" );
+    glMapBufferARB = ( PFNGLMAPBUFFERARBPROC ) wglGetProcAddress( "glMapBufferARB" );
+    glUnmapBufferARB = ( PFNGLUNMAPBUFFERARBPROC ) wglGetProcAddress( "glUnmapBufferARB" );
+
+	texture.load( "mat/error.bmp" );
+	//texture.load( "mat/Q2/models/monsters/tank/skin.pcx" );
+	glColor4f( 1.0, 1.0, 1.0, 1.0 );
+	glEnable( GL_CULL_FACE );
+	glFrontFace( GL_CW );
+	glEnable( GL_TEXTURE_2D );
+	glEnable( GL_DEPTH_TEST );
+
 };
 
-#define STRESS_TEST
+//#define STRESS_TEST
 #define VBO_RENDER
 
 void Video::render( void )
 {
 	glClear( GL_COLOR_BUFFER_BIT );
-
-	if ( model == nullptr ) return;
-
-	glColor4f( 1.0, 1.0, 1.0, 1.0 );
+	glClear( GL_DEPTH_BUFFER_BIT );
 
 	currentCam.transform();
-
-	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 	/**
 	 * monkHiRes.raw has 3936 triangles
@@ -66,6 +70,8 @@ void Video::render( void )
 	 * STRESS VBO		- ~420 fps
 	 * STRESS NO BUFFER - ~15 fps
 	 */
+
+	texture.setCurrent();
 
 	// Testing code:
 #ifdef STRESS_TEST
