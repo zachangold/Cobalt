@@ -7,23 +7,23 @@ using namespace std;
 #include "glut/Include/GL/glut.h"
 #include "glext.h"
 
-extern PFNGLGENBUFFERSARBPROC            pglGenBuffersARB;             // VBO Name Generation Procedure
-extern PFNGLBINDBUFFERARBPROC            pglBindBufferARB;             // VBO Bind Procedure
-extern PFNGLBUFFERDATAARBPROC            pglBufferDataARB;             // VBO Data Loading Procedure
-extern PFNGLBUFFERSUBDATAARBPROC         pglBufferSubDataARB;          // VBO Sub Data Loading Procedure
-extern PFNGLDELETEBUFFERSARBPROC         pglDeleteBuffersARB;          // VBO Deletion Procedure
-extern PFNGLGETBUFFERPARAMETERIVARBPROC  pglGetBufferParameterivARB;   // return various parameters of VBO
-extern PFNGLMAPBUFFERARBPROC             pglMapBufferARB;              // map VBO procedure
-extern PFNGLUNMAPBUFFERARBPROC           pglUnmapBufferARB;            // unmap VBO procedure
+extern PFNGLGENBUFFERSPROC            pglGenBuffers;             // VBO Name Generation Procedure
+extern PFNGLBINDBUFFERPROC            pglBindBuffer;             // VBO Bind Procedure
+extern PFNGLBUFFERDATAPROC            pglBufferData;             // VBO Data Loading Procedure
+extern PFNGLBUFFERSUBDATAPROC         pglBufferSubData;          // VBO Sub Data Loading Procedure
+extern PFNGLDELETEBUFFERSPROC         pglDeleteBuffers;          // VBO Deletion Procedure
+extern PFNGLGETBUFFERPARAMETERIVPROC  pglGetBufferParameteriv;   // return various parameters of VBO
+extern PFNGLMAPBUFFERPROC             pglMapBuffer;              // map VBO procedure
+extern PFNGLUNMAPBUFFERPROC           pglUnmapBuffer;            // unmap VBO procedure
 
-#define glGenBuffersARB           pglGenBuffersARB
-#define glBindBufferARB           pglBindBufferARB
-#define glBufferDataARB           pglBufferDataARB
-#define glBufferSubDataARB        pglBufferSubDataARB
-#define glDeleteBuffersARB        pglDeleteBuffersARB
-#define glGetBufferParameterivARB pglGetBufferParameterivARB
-#define glMapBufferARB            pglMapBufferARB
-#define glUnmapBufferARB          pglUnmapBufferARB
+#define glGenBuffers           pglGenBuffers
+#define glBindBuffer           pglBindBuffer
+#define glBufferData           pglBufferData
+#define glBufferSubData        pglBufferSubData
+#define glDeleteBuffers        pglDeleteBuffers
+#define glGetBufferParameteriv pglGetBufferParameteriv
+#define glMapBuffer            pglMapBuffer
+#define glUnmapBuffer          pglUnmapBuffer
 
 /**
  * An abstraction of the OpenGL Vertex Buffer Object (structure for
@@ -76,11 +76,14 @@ public:
 	 */
 	void draw( void );
 
+	void bind( void );
+	void unbind( void );
+
+	GLuint vbId;
 private:
 	/**
 	 * The handle to the vertex buffer in graphics memory
 	 */
-	GLuint vbId;
 
 	/**
 	 * The number of vertices stored in the vertex buffer

@@ -72,12 +72,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BSPMap.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CobaltGame.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Picture.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="startup.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
@@ -86,13 +90,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BMP.h" />
+    <ClInclude Include="BSPMap.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CobaltGame.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="PCX.h" />
     <ClInclude Include="Picture.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Video.h" />

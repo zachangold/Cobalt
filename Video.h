@@ -8,6 +8,7 @@ using namespace std;
 #include "Camera.h"
 #include "Model.h"
 #include "VertexBuffer.h"
+#include "BSPMap.h"
 
 class Video
 {
@@ -17,9 +18,7 @@ public:
 	~Video( void );
 
 	void init( void );
-
 	void setCamera( Camera& cam );
-
 	void render( void );
 
 	// This is purely temporary
@@ -29,7 +28,8 @@ public:
 	};
 
 	Model *model; 
-	//Texture texture;
+	Texture texture;
+	BSPMap map;
 
 private:
 	Window &window;

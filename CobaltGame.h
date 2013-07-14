@@ -6,6 +6,8 @@
 #include "Camera.h"
 #include "Model.h"
 #include "Video.h"
+#include "BSPMap.h"
+
 
 class CobaltGame
 {

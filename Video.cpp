@@ -1,13 +1,13 @@
 #include "Video.h"
 
-PFNGLGENBUFFERSARBPROC            pglGenBuffersARB = 0;             // VBO Name Generation Procedure
-PFNGLBINDBUFFERARBPROC            pglBindBufferARB = 0;             // VBO Bind Procedure
-PFNGLBUFFERDATAARBPROC            pglBufferDataARB = 0;             // VBO Data Loading Procedure
-PFNGLBUFFERSUBDATAARBPROC         pglBufferSubDataARB = 0;          // VBO Sub Data Loading Procedure
-PFNGLDELETEBUFFERSARBPROC         pglDeleteBuffersARB = 0;          // VBO Deletion Procedure
-PFNGLGETBUFFERPARAMETERIVARBPROC  pglGetBufferParameterivARB = 0;   // return various parameters of VBO
-PFNGLMAPBUFFERARBPROC             pglMapBufferARB = 0;              // map VBO procedure
-PFNGLUNMAPBUFFERARBPROC           pglUnmapBufferARB = 0;            // unmap VBO procedure
+PFNGLGENBUFFERSPROC            pglGenBuffers = 0;             // VBO Name Generation Procedure
+PFNGLBINDBUFFERPROC            pglBindBuffer = 0;             // VBO Bind Procedure
+PFNGLBUFFERDATAPROC            pglBufferData = 0;             // VBO Data Loading Procedure
+PFNGLBUFFERSUBDATAPROC         pglBufferSubData = 0;          // VBO Sub Data Loading Procedure
+PFNGLDELETEBUFFERSPROC         pglDeleteBuffers = 0;          // VBO Deletion Procedure
+PFNGLGETBUFFERPARAMETERIVPROC  pglGetBufferParameteriv = 0;   // return various parameters of VBO
+PFNGLMAPBUFFERPROC             pglMapBuffer = 0;              // map VBO procedure
+PFNGLUNMAPBUFFERPROC           pglUnmapBuffer = 0;            // unmap VBO procedure
 
 
 Video::Video( Window &_window ) : window( _window ), currentCam( defaultCam )
@@ -33,17 +33,19 @@ Video::~Video( void )
 void Video::init( void )
 {
     // get pointers to GL functions
-    glGenBuffersARB = ( PFNGLGENBUFFERSARBPROC ) wglGetProcAddress( "glGenBuffersARB" );
-    glBindBufferARB = ( PFNGLBINDBUFFERARBPROC ) wglGetProcAddress( "glBindBufferARB" );
-    glBufferDataARB = ( PFNGLBUFFERDATAARBPROC ) wglGetProcAddress( "glBufferDataARB" );
-    glBufferSubDataARB = ( PFNGLBUFFERSUBDATAARBPROC ) wglGetProcAddress( "glBufferSubDataARB" );
-    glDeleteBuffersARB = ( PFNGLDELETEBUFFERSARBPROC ) wglGetProcAddress( "glDeleteBuffersARB" );
-    glGetBufferParameterivARB = ( PFNGLGETBUFFERPARAMETERIVARBPROC ) wglGetProcAddress( "glGetBufferParameterivARB" );
-    glMapBufferARB = ( PFNGLMAPBUFFERARBPROC ) wglGetProcAddress( "glMapBufferARB" );
-    glUnmapBufferARB = ( PFNGLUNMAPBUFFERARBPROC ) wglGetProcAddress( "glUnmapBufferARB" );
+    glGenBuffers = ( PFNGLGENBUFFERSPROC ) wglGetProcAddress( "glGenBuffers" );
+    glBindBuffer = ( PFNGLBINDBUFFERPROC ) wglGetProcAddress( "glBindBuffer" );
+    glBufferData = ( PFNGLBUFFERDATAPROC ) wglGetProcAddress( "glBufferData" );
+    glBufferSubData = ( PFNGLBUFFERSUBDATAPROC ) wglGetProcAddress( "glBufferSubData" );
+    glDeleteBuffers = ( PFNGLDELETEBUFFERSPROC ) wglGetProcAddress( "glDeleteBuffers" );
+    glGetBufferParameteriv = ( PFNGLGETBUFFERPARAMETERIVPROC ) wglGetProcAddress( "glGetBufferParameteriv" );
+    glMapBuffer = ( PFNGLMAPBUFFERPROC ) wglGetProcAddress( "glMapBuffer" );
+    glUnmapBuffer = ( PFNGLUNMAPBUFFERPROC ) wglGetProcAddress( "glUnmapBuffer" );
 
-	//texture.load( "mat/error.bmp" );
+	texture.load( "mat/error.bmp" );
 	//texture.load( "mat/Q2/models/monsters/tank/skin.pcx" );
+	map.load( "mat/Q2/maps/base1.bsp" );
+
 	glColor4f( 1.0, 1.0, 1.0, 1.0 );
 	glEnable( GL_CULL_FACE );
 	glFrontFace( GL_CW );
@@ -62,6 +64,13 @@ void Video::render( void )
 
 	currentCam.transform();
 
+	glDisable( GL_TEXTURE_2D );
+	
+	glPushMatrix();
+		glScalef( 0.01f, 0.01f, 0.01f );
+		map.draw( currentCam );
+	glPopMatrix();
+
 	/**
 	 * monkHiRes.raw has 3936 triangles
 	 * stress tests involve 125 of these models (492000 triangles)
@@ -70,8 +79,8 @@ void Video::render( void )
 	 * STRESS VBO		- ~420 fps
 	 * STRESS NO BUFFER - ~15 fps
 	 */
-	//texture.setCurrent();
-	//glDisable( GL_TEXTURE_2D );
+	glEnable( GL_TEXTURE_2D );
+	texture.setCurrent();
 
 	// Testing code:
 #ifdef STRESS_TEST

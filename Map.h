@@ -10,16 +10,16 @@ public:
 	Map( string fileName );
 	virtual ~Map( void );
 
-	void load( string fileName );
+	static Map *load( string fileName );
 	void unload( void );
 
-	void draw( Camera &camera );
+	virtual void draw( Camera &camera ) = 0;
 
 protected:
 	
 
 private:
-	void loadBSP( void )
+
 
 };
 
