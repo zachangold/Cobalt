@@ -9,15 +9,13 @@ VertexBuffer::VertexBuffer( void )
 
 VertexBuffer::~VertexBuffer( void )
 {
-	if ( vbId != 0xFFFFFFFF )
-	{
-		glDeleteBuffersARB( 1, &vbId );
-	}
+	unload();
 };
 
 
 void VertexBuffer::load( float *vertexData, int nVertices, int vertexSize )
 {
+	unload();
 	this->nVertices = nVertices;
 
 	glGenBuffersARB( 1, &vbId );
@@ -25,6 +23,14 @@ void VertexBuffer::load( float *vertexData, int nVertices, int vertexSize )
 	glBufferDataARB( GL_ARRAY_BUFFER_ARB, nVertices * vertexSize, vertexData, GL_STATIC_DRAW_ARB );
 };
 
+void VertexBuffer::unload( void )
+{
+	if ( vbId != 0xFFFFFFFF )
+	{
+		glDeleteBuffersARB( 1, &vbId );
+		vbId = 0xFFFFFFFF;
+	}
+};
 
 void VertexBuffer::draw( void )
 {
@@ -32,7 +38,6 @@ void VertexBuffer::draw( void )
 
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, vbId );
 	glEnableClientState( GL_VERTEX_ARRAY );
-	//glVertexPointer( 3, GL_FLOAT, 0, 0 );
 	glInterleavedArrays( format, 0, NULL );
 	glDrawArrays( GL_TRIANGLES, 0, nVertices );
 	glDisableClientState( GL_VERTEX_ARRAY );

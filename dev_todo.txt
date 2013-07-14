@@ -1,0 +1,37 @@
+Bugs to fix:
+ - cursor is locked in position when alt-tabbed out of application
+
+Features to implement:
+ - Multisampling Antialiasing
+ - Pixel/Fragment Shaders (make an object for ease of use?)
+     - Parallax Occlusion Mapping
+ - Index buffering
+ - Normals & lighting
+     - Per pixel lighting (requires fragment shader)
+     - Normal/Bump/Height mapping
+     - Shadows (objects should cast shadows on themselves)
+     - Ambient Occlusion (if not done in map compilation)
+     - 
+ - Frustum culling
+ - Map rendering (primarily, binary-space culling)
+
+Code refactoring:
+ - Model and Texture loading
+   We may have multiple entities that use the same textures/models.
+   We don't want to load the same model/texture multiple times and
+   we will certainly not want to store the same data twice.
+   To fix this, we may make a TextureHandle/Texture distinction - users
+   will be able to instantiate and operate on TextureHandles, which will
+   deal with the Textures themselves, so that we can make a natural-feeling
+   interface while retaining memory efficiency.
+   In other words:
+    - TextureHandle: One (or more) per entity, used as a reference to the opengl 
+      texture object so that it can be drawn. May also be used for reference counting.
+    - Texture: One per file, used for graphics RAM allocation, image loading, etc.
+
+Things to research:
+ - Drawing multiple animating entities: can we draw batches of vertex buffers?
+     - If yes, then we want to store a unique vertex buffer for each entity
+     - If no, then we want to store a single vertex buffer for each model,
+       then before drawing each entity, update it with the current animation
+ - Shadows: shadow mapping with textures or with geometry?

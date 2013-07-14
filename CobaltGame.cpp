@@ -3,7 +3,7 @@
 
 CobaltGame::CobaltGame( void ) : window(), video( window )
 {
-
+	model = nullptr;
 };
 
 
@@ -19,8 +19,8 @@ void CobaltGame::main( void )
 	window.setupOpenGL();
 	video.init();
 	
-	model.load( "mat/box.raw" );
-	video.model = &model;
+	model = Model::load( "mat/box.raw" );
+	video.model = model;
 
 	input.init( window );
 

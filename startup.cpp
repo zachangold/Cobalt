@@ -8,6 +8,8 @@
 
 using namespace std;
 
+#define CRASH_RUN 0
+#define SUCCESSFUL_RUN 1
 
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
@@ -16,6 +18,8 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	Window::lpCmdLine = lpCmdLine;
 	Window::nCmdShow = nCmdShow;
 
+	int runResult = SUCCESSFUL_RUN;
+
 	try
 	{
 		CobaltGame game;
@@ -23,9 +27,11 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	} 
 	catch ( ... )
 	{
-		return 0;
+		runResult = CRASH_RUN;
 	}
 
-	return 1;
+	Model::deleteAll();
+	TextureHandle::deleteAll();
+	return runResult;
 };
 

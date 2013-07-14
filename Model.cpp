@@ -7,6 +7,7 @@
 
 const Model Model::NONE;
 const Model Model::DEFAULT;
+vector< Model * > Model::loaded;
 
 Model::Model( void )
 {
@@ -19,21 +20,35 @@ Model::~Model( void )
 
 };
 
-
-void Model::load( string fileName )
+Model *Model::load( string fileName )
 {
+	// search for another Model object with the same filename
+	for ( int i = 0; i < loaded.size(); ++i )
+	{
+		if ( loaded[ i ]->fileName.compare( fileName ) == 0 )
+		{
+			return loaded[ i ];
+		}
+	}
+
+	// If this model hasn't already been loaded, make a new one
+
 	// file extension
 	string ext = fileName.substr( fileName.find_last_of( '.' ), fileName.size() );
-	this->fileName = fileName;
+	Model *m = new Model();
+	m->fileName = fileName;
 
 	if ( ext.compare( ".raw" ) == 0 )
 	{
-		loadRAW( fileName );
+		m->loadRAW( fileName );
 	}
 	else
 	{
 		throw "Error: model file format not recognized";
 	}
+
+	loaded.push_back( m );
+	return m;
 };
 
 

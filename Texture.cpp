@@ -1,11 +1,11 @@
 #include "Texture.h"
 
+vector< TextureHandle::TextureReference > TextureHandle::loadedTextures;
 
 Texture::Texture( void )
 {
 	texId = 0xFFFFFFFF;
 };
-
 
 Texture::~Texture( void )
 {
@@ -14,16 +14,16 @@ Texture::~Texture( void )
 
 void Texture::load( string fileName )
 {
-	unload();
-
 	glGenTextures( 1, &texId );
 	glBindTexture( GL_TEXTURE_2D, texId );
 
 	// select modulate to mix texture with color for shading
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+
 	// when texture area is small, bilinear filter the closest mipmap
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 					 GL_LINEAR_MIPMAP_NEAREST );
+
 	// when texture area is large, bilinear filter the original
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
@@ -51,4 +51,29 @@ void Texture::unload( void )
 void Texture::setCurrent( void )
 {
 	glBindTexture( GL_TEXTURE_2D, texId );
+};
+
+void TextureHandle::deleteAll( void )
+{
+	for ( int i = 0; i < loadedTextures.size(); ++i )
+	{
+		loadedTextures[ i ].refCount = 0;
+		loadedTextures[ i ].fileName = "";
+
+		if ( loadedTextures[ i ].texture != nullptr )
+		{
+			delete loadedTextures[ i ].texture;
+			loadedTextures[ i ].texture = nullptr;
+		}
+	}
+
+	loadedTextures.resize( 0 );
+};
+
+
+TextureHandle::TextureReference::TextureReference( void )
+{
+	refCount = 0;
+	texture = nullptr;
+	fileName = "";
 };

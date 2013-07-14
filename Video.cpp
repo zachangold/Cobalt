@@ -42,7 +42,7 @@ void Video::init( void )
     glMapBufferARB = ( PFNGLMAPBUFFERARBPROC ) wglGetProcAddress( "glMapBufferARB" );
     glUnmapBufferARB = ( PFNGLUNMAPBUFFERARBPROC ) wglGetProcAddress( "glUnmapBufferARB" );
 
-	texture.load( "mat/error.bmp" );
+	//texture.load( "mat/error.bmp" );
 	//texture.load( "mat/Q2/models/monsters/tank/skin.pcx" );
 	glColor4f( 1.0, 1.0, 1.0, 1.0 );
 	glEnable( GL_CULL_FACE );
@@ -70,8 +70,8 @@ void Video::render( void )
 	 * STRESS VBO		- ~420 fps
 	 * STRESS NO BUFFER - ~15 fps
 	 */
-
-	texture.setCurrent();
+	//texture.setCurrent();
+	//glDisable( GL_TEXTURE_2D );
 
 	// Testing code:
 #ifdef STRESS_TEST

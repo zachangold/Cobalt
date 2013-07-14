@@ -20,7 +20,17 @@ public:
 	Model( void );
 	virtual ~Model( void );
 
-	void load( string fileName );
+	static Model *load( string fileName );
+	
+	static void deleteAll( void )
+	{
+		for ( int i = 0; i < loaded.size(); ++i )
+		{
+			delete loaded[ i ];
+		}
+		loaded.resize( 0 );
+	};
+
 	vector< Vertex > &getVertices( void )
 	{
 		return vertices;
@@ -36,12 +46,16 @@ public:
 
 
 private:
+	// loading for specific file formats
 	void loadRAW( string fileName );
+	//void loadMD2( string fileName );
 
+	// Data to keep track of which models are loaded
 	static vector< Model * > loaded;
+	// fileName for identity comparison between models
+	string fileName;
 
 	vector< Vertex > vertices;
-	string fileName;
 
 	Texture texture;
 	VertexBuffer vBuffer;

@@ -29,7 +29,7 @@ public:
 	};
 
 	Model *model; 
-	Texture texture;
+	//Texture texture;
 
 private:
 	Window &window;

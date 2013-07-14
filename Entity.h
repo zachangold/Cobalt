@@ -6,6 +6,7 @@ using namespace std;
 
 #include "Model.h"
 #include "Texture.h"
+#include "Entity.h"
 
 class Entity
 {
@@ -13,16 +14,11 @@ public:
 	Entity( void );
 	~Entity( void );
 
-
-protected:
-	void loadModel( string modelPath );
-	void loadTexture( string texPath );
-
-
-private:
-	//Texture& texture;
-	//Model& model;
-
+	/**
+	 * Draws the entity. The camera is there just for binary-space
+	 * partitioning culling and frustum culling
+	 */
+	virtual void draw( Camera& camera );
 
 };
 
