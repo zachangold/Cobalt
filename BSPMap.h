@@ -32,7 +32,7 @@
 
 #define BSP_VERTEX_FORMAT GL_V3F
 
-#pragma pack ( push, 1 )
+//#pragma pack ( push, 1 )
 
 typedef unsigned __int16 Index16;
 typedef unsigned __int32 Index32;
@@ -53,11 +53,13 @@ typedef struct
 
 typedef struct
 {
-	unsigned __int32 offset, length;
+	unsigned __int32 offset;
+	unsigned __int32 length;
 } BSPLump;
 
 typedef struct
 {
+	int magic;
 	int version;
 	BSPLump lump[ 19 ];
 } BSPHeader;
@@ -87,7 +89,7 @@ typedef struct
 	int lightmapOffset;
 } BSPFace;
 
-#pragma pack( pop )
+//#pragma pack( pop )
 
 class BSPMap : public Map
 {

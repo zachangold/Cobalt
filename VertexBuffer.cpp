@@ -39,7 +39,7 @@ void VertexBuffer::draw( void )
 	glBindBuffer( GL_ARRAY_BUFFER, vbId );
 	//glEnableClientState( GL_VERTEX_ARRAY );
 	glInterleavedArrays( format, 0, NULL );
-	glDrawArrays( GL_POINTS, 0, nVertices );
+	glDrawArrays( GL_LINES, 0, nVertices/2 );
 	//glDisableClientState( GL_VERTEX_ARRAY );
 };
 
@@ -47,6 +47,7 @@ void VertexBuffer::draw( void )
 void VertexBuffer::bind( void )
 {
 	glBindBuffer( GL_ARRAY_BUFFER, vbId );
+	glInterleavedArrays( format, 0, NULL );
 
 };
 
