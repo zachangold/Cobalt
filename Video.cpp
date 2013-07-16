@@ -47,8 +47,8 @@ void Video::init( void )
 	map.load( "mat/Q2/maps/base1.bsp" );
 
 	glColor4f( 1.0, 1.0, 1.0, 1.0 );
-	glEnable( GL_CULL_FACE );
-	glFrontFace( GL_CW );
+	//glEnable( GL_CULL_FACE );
+	//glFrontFace( GL_CW );
 	glEnable( GL_TEXTURE_2D );
 	glEnable( GL_DEPTH_TEST );
 
@@ -66,6 +66,8 @@ void Video::render( void )
 
 	glDisable( GL_TEXTURE_2D );
 	
+	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
 	glPushMatrix();
 		glScalef( 0.01f, 0.01f, 0.01f );
 		map.draw( currentCam );

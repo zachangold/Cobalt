@@ -37,6 +37,6 @@ void IndexBuffer::draw( void )
 
 	glEnableClientState( GL_ELEMENT_ARRAY_BUFFER );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibId );
-	glDrawElements( GL_LINES, nIndices, GL_UNSIGNED_SHORT, 0 );
+	glDrawElements( GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0 );
 	glDisableClientState( GL_ELEMENT_ARRAY_BUFFER );
 };

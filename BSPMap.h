@@ -37,17 +37,28 @@
 typedef unsigned __int16 Index16;
 typedef unsigned __int32 Index32;
 
-typedef struct
+typedef struct Point3f
 {
     float x, y, z;
+
+	Point3f cross( Point3f a, Point3f b )
+	{
+		Point3f rtn;
+		rtn.x = a.y * b.z - a.z * b.y;
+		rtn.y = a.z * b.x - a.x * b.z;
+		rtn.z = a.x * b.y - a.y * b.x;
+		return rtn;
+	};
 } Point3f;
 
 typedef struct
 {
-    short x, y, z;} Point3s;
+    short x, y, z;
+} Point3s;
 
 typedef struct
 {
+	//float u, v;
 	float x, y, z;
 } BSPVertex;
 
@@ -77,7 +88,8 @@ typedef struct
  *     num_edges: number of edges in the face
  *     texture_info: index of the texture info struct
  *     lightmap_styles: styles (bit flags) for the lightmaps
- *     lightmap_offset: offset of the lightmap (in bytes) in the lightmap lump */
+ *     lightmap_offset: offset of the lightmap (in bytes) in the lightmap lump
+ */
 typedef struct
 {
 	Index16 planeIndex;

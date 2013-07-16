@@ -16,17 +16,6 @@ BSPMap::~BSPMap( void )
 
 void BSPMap::load( string fileName )
 {
-	/*
-	ifstream file( fileName, fstream::in | fstream::binary | fstream::ate );
-	int fileLen = file.tellg();
-	file.seekg( 0 );
-	//vector< char > fileData( fileLen );
-	char *fileData = new char[ fileLen ];
-	
-	file.read( &fileData[ 0 ], fileLen );
-	file.close();
-	*/
-
 	FILE *file = fopen( fileName.c_str(), "rb" );
 	fseek( file, 0L, SEEK_END );
 	int fileLen = ftell( file );
@@ -50,7 +39,6 @@ void BSPMap::load( string fileName )
 
 	vBuffer.setFormat( BSP_VERTEX_FORMAT );
 
-	vector< unsigned short > lineList;
 
 	BSPEdge *edgeArray = ( BSPEdge * ) &fileData[ header.lump[ BSP_EDGE_LUMP ].offset ];
 	Point3f *vtxArray = ( Point3f * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ];
@@ -61,27 +49,64 @@ void BSPMap::load( string fileName )
 	int numEdges = header.lump[ BSP_EDGE_LUMP ].length / sizeof( BSPEdge );
 	int numVertices = header.lump[ BSP_VERTEX_LUMP ].length / sizeof( Point3f );
 
+	// contains indices into vertices
+	vector< Index32 > triList;
+
+	// contains a set of vertices for each BSPFace
+	vector< BSPVertex > vertices;
+
 	for ( int i = 0; i < header.lump[ BSP_FACE_LUMP ].length / sizeof( BSPFace ); ++i )
 	{
+		vector< BSPEdge > polyEdges;
+
+		// Set up the list of edges in order
 		for ( int e = faceArray[ i ].firstEdgeIndex; e < faceArray[ i ].firstEdgeIndex + faceArray[ i ].num_edges; ++e )
 		{
 			if ( faceEdgeArray[ e ] < 0 )
 			{
-				lineList.push_back( edgeArray[ -faceEdgeArray[ e ] ].p2 );
-				lineList.push_back( edgeArray[ -faceEdgeArray[ e ] ].p1 );
+				BSPEdge reversedEdge;
+				reversedEdge.p1 = edgeArray[ -faceEdgeArray[ e ] ].p2;
+				reversedEdge.p2 = edgeArray[ -faceEdgeArray[ e ] ].p1;
+				polyEdges.push_back( reversedEdge );
 			}
 			else
 			{
-				lineList.push_back( edgeArray[ faceEdgeArray[ e ] ].p1 );
-				lineList.push_back( edgeArray[ faceEdgeArray[ e ] ].p2 );
+				polyEdges.push_back( edgeArray[ faceEdgeArray[ e ] ] );
 			}
+		}
+
+		// Add the polygon's vertices
+		for ( int d = 0; d < polyEdges.size(); ++d )
+		{
+			BSPVertex vtx;
+			vtx.x = vtxArray[ polyEdges[ d ].p1 ].x;
+			vtx.y = vtxArray[ polyEdges[ d ].p1 ].y;
+			vtx.z = vtxArray[ polyEdges[ d ].p1 ].z;
+
+			// Calculate texture coordinates here
+			//vtx.u = 0.0;
+			//vtx.v = 0.0;
+
+			// Add the vertex to the end of the vertex buffer
+			vertices.push_back( vtx );
+		}
+
+		// Set up the indices for the triangles
+		for ( int idx = vertices.size() - polyEdges.size() + 2; idx < vertices.size(); ++idx )
+		{
+			// fan the polygon from the first vertex
+			triList.push_back( vertices.size() - polyEdges.size() );
+
+			triList.push_back( idx - 1 );
+			triList.push_back( idx );
 		}
 	}
 
-	vBuffer.load( ( float * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ], 
-				  header.lump[ BSP_VERTEX_LUMP ].length / sizeof( Point3f ), sizeof( Point3f ) );
+	//vBuffer.load( ( float * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ], 
+	//			  header.lump[ BSP_VERTEX_LUMP ].length / sizeof( Point3f ), sizeof( Point3f ) );
 
-	iBuffer.load( &lineList[ 0 ], lineList.size(), sizeof( Index16 ) );
+	vBuffer.load( ( float * ) &vertices[ 0 ], vertices.size(), sizeof( BSPVertex ) );
+	iBuffer.load( &triList[ 0 ], triList.size(), sizeof( Index32 ) );
 
 	delete[] fileData;
 };

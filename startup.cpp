@@ -20,15 +20,15 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	int runResult = SUCCESSFUL_RUN;
 
-	try
-	{
+	//try
+	//{
 		CobaltGame game;
 		game.main();
-	} 
-	catch ( ... )
-	{
-		runResult = CRASH_RUN;
-	}
+	//} 
+	//catch ( ... )
+	//{
+	//	runResult = CRASH_RUN;
+	//}
 
 	Model::deleteAll();
 	TextureHandle::deleteAll();
