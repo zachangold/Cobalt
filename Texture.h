@@ -53,11 +53,15 @@ public:
 	 */
 	void setCurrent( void );
 
+	int getWidth( void ) { return width; };
+	int getHeight( void ) { return height; };
+
 private:
 	/**
 	 * The texture's ID, as assigned to it by OpenGL during loading.
 	 */
 	GLuint texId;
+	int width, height;
 };
 
 
@@ -89,7 +93,7 @@ public:
 	 * 
 	 * @return reference to object left of '='
 	 */
-	TextureHandle &operator = ( TextureHandle rhs );
+	//TextureHandle &operator = ( TextureHandle rhs );
 
 	/**
 	 * Sets up this TextureHandle to refer to a texture that is
@@ -116,6 +120,9 @@ public:
 	 * this handle.
 	 */
 	void setCurrent( void );
+
+	int getWidth( void ) { return loadedTextures[ texRefIndex ].texture->getWidth(); };
+	int getHeight( void ) { return loadedTextures[ texRefIndex ].texture->getHeight(); };
 
 	/**
 	 * Deletes all Textures that currently have 0 TextureHandles
@@ -179,7 +186,7 @@ private:
 	/**
 	 * The Texture reference 
 	 */
-	TextureReference *texRef;
+	int texRefIndex;
 };
 
 

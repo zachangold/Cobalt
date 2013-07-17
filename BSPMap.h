@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Camera.h"
 #include "IndexBuffer.h"
+#include "Texture.h"
 
 #define BSP_ENTITY_LUMP         0  // MAP entity text buffer
 #define BSP_PLANE_LUMP          1  // Plane array
@@ -30,7 +31,7 @@
 #define BSP_AREA_LUMP          17 // ?
 #define BSP_AREA_PORTAL_LUMP   18 // ?
 
-#define BSP_VERTEX_FORMAT GL_V3F
+#define BSP_VERTEX_FORMAT GL_T2F_N3F_V3F
 
 //#pragma pack ( push, 1 )
 
@@ -41,12 +42,12 @@ typedef struct Point3f
 {
     float x, y, z;
 
-	Point3f cross( Point3f a, Point3f b )
+	Point3f cross( Point3f rhs )
 	{
 		Point3f rtn;
-		rtn.x = a.y * b.z - a.z * b.y;
-		rtn.y = a.z * b.x - a.x * b.z;
-		rtn.z = a.x * b.y - a.y * b.x;
+		rtn.x = y * rhs.z - z * rhs.y;
+		rtn.y = z * rhs.x - x * rhs.z;
+		rtn.z = x * rhs.y - y * rhs.x;
 		return rtn;
 	};
 } Point3f;
@@ -58,7 +59,8 @@ typedef struct
 
 typedef struct
 {
-	//float u, v;
+	float u, v;
+	float nx, ny, nz;
 	float x, y, z;
 } BSPVertex;
 
@@ -101,6 +103,21 @@ typedef struct
 	int lightmapOffset;
 } BSPFace;
 
+typedef struct
+{
+    Point3f  u_axis;
+    float    u_offset;
+   
+    Point3f  v_axis;
+    float    v_offset;
+
+    unsigned __int32 flags;
+    unsigned __int32 value;
+
+    char     texture_name[32];
+    Index32  next_texinfo;
+} BSPTexInfo;
+
 //#pragma pack( pop )
 
 class BSPMap : public Map
@@ -120,7 +137,18 @@ private:
 	VertexBuffer vBuffer;
 	IndexBuffer iBuffer;
 
+	typedef struct
+	{
+		Index32 start, end;
+	} IndexRange;
 
+	typedef struct
+	{
+		IndexRange polys;
+		TextureHandle tex;
+	} Surface;
+
+	vector< Surface > surfaces;
 };
 
 #endif /* BSPMapH */

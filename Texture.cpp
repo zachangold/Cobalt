@@ -7,6 +7,12 @@ Texture::Texture( void )
 	texId = 0xFFFFFFFF;
 };
 
+Texture::Texture( string fileName )
+{
+	texId = 0xFFFFFFFF;
+	load( fileName );
+};
+
 Texture::~Texture( void )
 {
 	unload();
@@ -37,6 +43,10 @@ void Texture::load( string fileName )
 
 	Picture pic( fileName );
 	gluBuild2DMipmaps( GL_TEXTURE_2D, 4, pic.getWidth(), pic.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, pic.getBitmap() );
+	glBindTexture( GL_TEXTURE_2D, 0 );
+
+	width = pic.getWidth();
+	height = pic.getHeight();
 };
 
 void Texture::unload( void )
@@ -74,6 +84,53 @@ void TextureHandle::deleteAll( void )
 TextureHandle::TextureReference::TextureReference( void )
 {
 	refCount = 0;
-	texture = nullptr;
 	fileName = "";
+	texture = nullptr;
+};
+
+TextureHandle::TextureHandle( void )
+{
+	texRefIndex = -1;
+};
+
+TextureHandle::TextureHandle( string fileName )
+{
+	texRefIndex = -1;
+	load( fileName );
+};
+
+void TextureHandle::load( string fileName )
+{
+	unload();
+
+	for ( int i = 0; i < loadedTextures.size(); ++i )
+	{
+		if ( loadedTextures[ i ].fileName.compare( fileName ) == 0 )
+		{
+			loadedTextures[ i ].refCount++;
+			texRefIndex = i;
+			return;
+		}
+	}
+
+	TextureReference tR;
+	tR.texture = new Texture( fileName );
+	tR.fileName = fileName;
+	tR.refCount = 1;
+	loadedTextures.push_back( tR );
+	texRefIndex = loadedTextures.size() - 1;
+};
+
+void TextureHandle::unload( void )
+{
+	if ( texRefIndex == -1 ) return;
+
+	loadedTextures[ texRefIndex ].refCount--;
+	texRefIndex = -1;
+};
+
+void TextureHandle::setCurrent( void )
+{
+	if ( texRefIndex == -1 ) return;
+	else loadedTextures[ texRefIndex ].texture->setCurrent();	
 };

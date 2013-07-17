@@ -5,6 +5,9 @@
 #include "BMP.h"
 #include "PCX.h"
 
+Picture walColorMap;
+bool walColorMapLoaded = false;
+
 Picture::Picture( void )
 {
 	width = 0;
@@ -36,6 +39,10 @@ void Picture::load( string fileName )
 	else if ( ext.compare( ".pcx" ) == 0 )
 	{
 		loadPCX( fileName );
+	}
+	else if ( ext.compare( ".wal" ) == 0 )
+	{
+		loadWAL( fileName );
 	}
 };
 
@@ -209,4 +216,67 @@ void Picture::loadPCX( string fileName )
 	// désallocation mémoire tampon
 	delete [] data;
 	delete [] buffer;
+};
+
+typedef struct
+{
+	char name[ 32 ];
+	unsigned __int32 width;
+	unsigned __int32 height;
+	__int32 offset[ 4 ];
+	char next_name[ 32 ];
+	unsigned __int32 flags;
+	unsigned __int32 contents;
+	unsigned __int32 value;
+} WALHeader;
+
+typedef struct
+{
+	unsigned char r, g, b;
+} Colour3b;
+
+typedef struct
+{
+	unsigned char r, g, b, a;
+} Colour4b;
+
+vector< char > fileData;
+
+void Picture::loadWAL( string fileName )
+{
+	if ( !walColorMapLoaded )
+	{
+		walColorMap.load( "mat/Q2/pics/colormap.pcx" );
+		walColorMapLoaded = true;
+	}
+
+
+	ifstream file( fileName, ios::in | ios::binary | ios::ate );
+	fileData.resize( file.tellg() );
+	file.seekg( 0 );
+	file.read( &fileData[ 0 ], fileData.size() );
+	file.close();
+	
+	WALHeader *header = ( WALHeader * ) &fileData[ 0 ];
+	width = header->width;
+	height = header->height;
+
+	Colour4b *colorMap = ( Colour4b * ) walColorMap.getBitmap();
+	char *pic = &fileData[ header->offset[ 0 ] ];
+
+	bitmap.resize( width * height * 4 );
+	Colour4b *bitmapColours = ( Colour4b * ) &bitmap[ 0 ];
+
+	int cmapW = walColorMap.getWidth();
+	int cmapH = walColorMap.getHeight();
+
+	for ( int px = 0; px < width * height; ++px )
+	{
+		bitmapColours[ px ].r = colorMap[ pic[ px ] + 319 * 256 ].r;
+		bitmapColours[ px ].g = colorMap[ pic[ px ] + 319 * 256 ].g;
+		bitmapColours[ px ].b = colorMap[ pic[ px ] + 319 * 256 ].b;
+		bitmapColours[ px ].a = 255;
+	}
+	
+	int x = 5;
 };

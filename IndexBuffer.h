@@ -13,6 +13,7 @@ public:
 	void unload( void );
 
 	void draw( void );
+	void draw( int startIndex, int endIndex );
 
 	GLuint ibId;
 private:

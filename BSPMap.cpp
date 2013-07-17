@@ -28,6 +28,7 @@ void BSPMap::load( string fileName )
 	// read in the header
 	memcpy( &header, &fileData[ 0 ], sizeof( BSPHeader ) );
 
+	/*
 	Point3f *firstVertex = ( Point3f * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ];
 	for ( int v = 0; v < header.lump[ BSP_VERTEX_LUMP ].length / 12; ++v )
 	{
@@ -36,6 +37,7 @@ void BSPMap::load( string fileName )
 		(firstVertex+v)->x = (firstVertex+v)->y;
 		(firstVertex+v)->y = temp;
 	}
+	*/
 
 	vBuffer.setFormat( BSP_VERTEX_FORMAT );
 
@@ -44,6 +46,7 @@ void BSPMap::load( string fileName )
 	Point3f *vtxArray = ( Point3f * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ];
 	BSPFace *faceArray = ( BSPFace * ) &fileData[ header.lump[ BSP_FACE_LUMP ].offset ];
 	__int32 *faceEdgeArray = ( __int32 * ) &fileData[ header.lump[ BSP_FACE_EDGE_LUMP ].offset ];
+	BSPTexInfo *texInfoArray = ( BSPTexInfo * ) &fileData[ header.lump[ BSP_TEX_INFO_LUMP ].offset ];
 
 
 	int numEdges = header.lump[ BSP_EDGE_LUMP ].length / sizeof( BSPEdge );
@@ -58,6 +61,9 @@ void BSPMap::load( string fileName )
 	for ( int i = 0; i < header.lump[ BSP_FACE_LUMP ].length / sizeof( BSPFace ); ++i )
 	{
 		vector< BSPEdge > polyEdges;
+		BSPTexInfo texInfo = texInfoArray[ faceArray[ i ].texInfoIndex ];
+		Surface s;
+		s.tex.load( string( "mat/Q2/textures/" ).append( texInfo.texture_name ).append( ".wal" ) );
 
 		// Set up the list of edges in order
 		for ( int e = faceArray[ i ].firstEdgeIndex; e < faceArray[ i ].firstEdgeIndex + faceArray[ i ].num_edges; ++e )
@@ -75,17 +81,33 @@ void BSPMap::load( string fileName )
 			}
 		}
 
+		Point3f surfaceNormal;
+		Point3f armA, armB;
+		armA.x = vtxArray[ polyEdges[ 1 ].p1 ].y - vtxArray[ polyEdges[ 0 ].p1 ].y;
+		armA.y = vtxArray[ polyEdges[ 1 ].p1 ].z - vtxArray[ polyEdges[ 0 ].p1 ].z;
+		armA.z = vtxArray[ polyEdges[ 1 ].p1 ].x - vtxArray[ polyEdges[ 0 ].p1 ].x;
+
+		armB.x = vtxArray[ polyEdges[ 2 ].p1 ].y - vtxArray[ polyEdges[ 0 ].p1 ].y;
+		armB.y = vtxArray[ polyEdges[ 2 ].p1 ].z - vtxArray[ polyEdges[ 0 ].p1 ].z;
+		armB.z = vtxArray[ polyEdges[ 2 ].p1 ].x - vtxArray[ polyEdges[ 0 ].p1 ].x;
+
+		surfaceNormal = armA.cross( armB );
+
 		// Add the polygon's vertices
 		for ( int d = 0; d < polyEdges.size(); ++d )
 		{
 			BSPVertex vtx;
-			vtx.x = vtxArray[ polyEdges[ d ].p1 ].x;
-			vtx.y = vtxArray[ polyEdges[ d ].p1 ].y;
-			vtx.z = vtxArray[ polyEdges[ d ].p1 ].z;
+			vtx.x = vtxArray[ polyEdges[ d ].p1 ].y;
+			vtx.y = vtxArray[ polyEdges[ d ].p1 ].z;
+			vtx.z = vtxArray[ polyEdges[ d ].p1 ].x;
+
+			vtx.nx = surfaceNormal.x;
+			vtx.ny = surfaceNormal.y;
+			vtx.nz = surfaceNormal.z;
 
 			// Calculate texture coordinates here
-			//vtx.u = 0.0;
-			//vtx.v = 0.0;
+			vtx.u = ( vtx.z * texInfo.u_axis.x + vtx.x * texInfo.u_axis.y + vtx.y * texInfo.u_axis.z + texInfo.u_offset ) / s.tex.getWidth();
+			vtx.v = ( vtx.z * texInfo.v_axis.x + vtx.x * texInfo.v_axis.y + vtx.y * texInfo.v_axis.z + texInfo.v_offset ) / s.tex.getHeight();
 
 			// Add the vertex to the end of the vertex buffer
 			vertices.push_back( vtx );
@@ -100,6 +122,11 @@ void BSPMap::load( string fileName )
 			triList.push_back( idx - 1 );
 			triList.push_back( idx );
 		}
+
+		s.polys.start = triList.size() - 3 * ( polyEdges.size() - 2 );
+		s.polys.end = triList.size();
+
+		surfaces.push_back( s );
 	}
 
 	//vBuffer.load( ( float * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ], 
@@ -115,7 +142,13 @@ void BSPMap::load( string fileName )
 void BSPMap::draw( Camera &camera )
 {
 	vBuffer.bind();
-	iBuffer.draw();
+	//iBuffer.draw();
+
+	for ( int s = 0; s < surfaces.size(); ++s )
+	{
+		surfaces[ s ].tex.setCurrent();
+		iBuffer.draw( surfaces[ s ].polys.start, surfaces[ s ].polys.end );
+	}
 };
 
 

@@ -23,6 +23,7 @@ public:
 private:
 	void loadBMP( string fileName );
 	void loadPCX( string fileName );
+	void loadWAL( string fileName );
 	// Other file formats go here
 
 	vector< char > bitmap;

@@ -64,10 +64,11 @@ void Video::render( void )
 
 	currentCam.transform();
 
-	glDisable( GL_TEXTURE_2D );
+	//glDisable( GL_TEXTURE_2D );
 	
-	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
+	glEnable( GL_TEXTURE_2D );
 	glPushMatrix();
 		glScalef( 0.01f, 0.01f, 0.01f );
 		map.draw( currentCam );

@@ -40,3 +40,13 @@ void IndexBuffer::draw( void )
 	glDrawElements( GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0 );
 	glDisableClientState( GL_ELEMENT_ARRAY_BUFFER );
 };
+
+void IndexBuffer::draw( int startIndex, int endIndex )
+{
+	if ( ibId == 0xFFFFFFFF ) return;
+
+	glEnableClientState( GL_ELEMENT_ARRAY_BUFFER );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibId );
+	glDrawElements( GL_TRIANGLES, endIndex - startIndex, GL_UNSIGNED_INT, ( GLvoid * ) ( startIndex*4 ) );
+	glDisableClientState( GL_ELEMENT_ARRAY_BUFFER );
+};
