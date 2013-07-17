@@ -23,7 +23,7 @@ Model::~Model( void )
 Model *Model::load( string fileName )
 {
 	// search for another Model object with the same filename
-	for ( int i = 0; i < loaded.size(); ++i )
+	for ( size_t i = 0; i < loaded.size(); ++i )
 	{
 		if ( loaded[ i ]->fileName.compare( fileName ) == 0 )
 		{

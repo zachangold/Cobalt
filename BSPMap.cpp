@@ -39,8 +39,6 @@ void BSPMap::load( string fileName )
 	}
 	*/
 
-	vBuffer.setFormat( BSP_VERTEX_FORMAT );
-
 
 	BSPEdge *edgeArray = ( BSPEdge * ) &fileData[ header.lump[ BSP_EDGE_LUMP ].offset ];
 	Point3f *vtxArray = ( Point3f * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ];
@@ -58,7 +56,9 @@ void BSPMap::load( string fileName )
 	// contains a set of vertices for each BSPFace
 	vector< BSPVertex > vertices;
 
-	for ( int i = 0; i < header.lump[ BSP_FACE_LUMP ].length / sizeof( BSPFace ); ++i )
+	vector< Point3f > normalLines;
+
+	for ( size_t i = 0; i < header.lump[ BSP_FACE_LUMP ].length / sizeof( BSPFace ); ++i )
 	{
 		vector< BSPEdge > polyEdges;
 		BSPTexInfo texInfo = texInfoArray[ faceArray[ i ].texInfoIndex ];
@@ -66,7 +66,7 @@ void BSPMap::load( string fileName )
 		s.tex.load( string( "mat/Q2/textures/" ).append( texInfo.texture_name ).append( ".wal" ) );
 
 		// Set up the list of edges in order
-		for ( int e = faceArray[ i ].firstEdgeIndex; e < faceArray[ i ].firstEdgeIndex + faceArray[ i ].num_edges; ++e )
+		for ( size_t e = faceArray[ i ].firstEdgeIndex; e < faceArray[ i ].firstEdgeIndex + faceArray[ i ].num_edges; ++e )
 		{
 			if ( faceEdgeArray[ e ] < 0 )
 			{
@@ -83,6 +83,7 @@ void BSPMap::load( string fileName )
 
 		Point3f surfaceNormal;
 		Point3f armA, armB;
+
 		armA.x = vtxArray[ polyEdges[ 1 ].p1 ].y - vtxArray[ polyEdges[ 0 ].p1 ].y;
 		armA.y = vtxArray[ polyEdges[ 1 ].p1 ].z - vtxArray[ polyEdges[ 0 ].p1 ].z;
 		armA.z = vtxArray[ polyEdges[ 1 ].p1 ].x - vtxArray[ polyEdges[ 0 ].p1 ].x;
@@ -91,10 +92,12 @@ void BSPMap::load( string fileName )
 		armB.y = vtxArray[ polyEdges[ 2 ].p1 ].z - vtxArray[ polyEdges[ 0 ].p1 ].z;
 		armB.z = vtxArray[ polyEdges[ 2 ].p1 ].x - vtxArray[ polyEdges[ 0 ].p1 ].x;
 
-		surfaceNormal = armA.cross( armB );
+		surfaceNormal = armB.cross( armA );
+		surfaceNormal.normalize();
+
 
 		// Add the polygon's vertices
-		for ( int d = 0; d < polyEdges.size(); ++d )
+		for ( size_t d = 0; d < polyEdges.size(); ++d )
 		{
 			BSPVertex vtx;
 			vtx.x = vtxArray[ polyEdges[ d ].p1 ].y;
@@ -105,6 +108,24 @@ void BSPMap::load( string fileName )
 			vtx.ny = surfaceNormal.y;
 			vtx.nz = surfaceNormal.z;
 
+			//vtx.nx = 0.0;
+			//vtx.ny = 1.0;
+			//vtx.nz = 0.0;
+
+			Point3f NLINEBASE;
+			NLINEBASE.x = vtx.x;
+			NLINEBASE.y = vtx.y;
+			NLINEBASE.z = vtx.z;
+
+			Point3f NLINEEND;
+			NLINEEND.x = vtx.x + vtx.nx * 10.0;
+			NLINEEND.y = vtx.y + vtx.ny * 10.0;
+			NLINEEND.z = vtx.z + vtx.nz * 10.0;
+
+			normalLines.push_back( NLINEBASE );
+			normalLines.push_back( NLINEEND );
+
+
 			// Calculate texture coordinates here
 			vtx.u = ( vtx.z * texInfo.u_axis.x + vtx.x * texInfo.u_axis.y + vtx.y * texInfo.u_axis.z + texInfo.u_offset ) / s.tex.getWidth();
 			vtx.v = ( vtx.z * texInfo.v_axis.x + vtx.x * texInfo.v_axis.y + vtx.y * texInfo.v_axis.z + texInfo.v_offset ) / s.tex.getHeight();
@@ -114,7 +135,7 @@ void BSPMap::load( string fileName )
 		}
 
 		// Set up the indices for the triangles
-		for ( int idx = vertices.size() - polyEdges.size() + 2; idx < vertices.size(); ++idx )
+		for ( size_t idx = vertices.size() - polyEdges.size() + 2; idx < vertices.size(); ++idx )
 		{
 			// fan the polygon from the first vertex
 			triList.push_back( vertices.size() - polyEdges.size() );
@@ -132,8 +153,12 @@ void BSPMap::load( string fileName )
 	//vBuffer.load( ( float * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ], 
 	//			  header.lump[ BSP_VERTEX_LUMP ].length / sizeof( Point3f ), sizeof( Point3f ) );
 
+	normalLineBuffer.load( ( float * ) &normalLines[ 0 ], normalLines.size(), sizeof( Point3f ) );
 	vBuffer.load( ( float * ) &vertices[ 0 ], vertices.size(), sizeof( BSPVertex ) );
 	iBuffer.load( &triList[ 0 ], triList.size(), sizeof( Index32 ) );
+
+	vBuffer.setFormat( BSP_VERTEX_FORMAT );
+	normalLineBuffer.setFormat( GL_V3F );
 
 	delete[] fileData;
 };
@@ -141,14 +166,16 @@ void BSPMap::load( string fileName )
 
 void BSPMap::draw( Camera &camera )
 {
+	normalLineBuffer.draw();
 	vBuffer.bind();
 	//iBuffer.draw();
 
-	for ( int s = 0; s < surfaces.size(); ++s )
+	for ( size_t s = 0; s < surfaces.size(); ++s )
 	{
 		surfaces[ s ].tex.setCurrent();
 		iBuffer.draw( surfaces[ s ].polys.start, surfaces[ s ].polys.end );
 	}
+
 };
 
 

@@ -10,7 +10,7 @@ Input::Input( void )
 	keyboard = nullptr;
 	mouse = nullptr;
 
-	sensitivity = 0.003;
+	sensitivity = 0.003f;
 
 	initInput();
 };

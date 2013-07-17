@@ -124,6 +124,8 @@ public:
 	int getWidth( void ) { return loadedTextures[ texRefIndex ].texture->getWidth(); };
 	int getHeight( void ) { return loadedTextures[ texRefIndex ].texture->getHeight(); };
 
+	bool operator == ( TextureHandle& rhs ) { return texRefIndex == rhs.texRefIndex; };
+
 	/**
 	 * Deletes all Textures that currently have 0 TextureHandles
 	 * pointing to them.

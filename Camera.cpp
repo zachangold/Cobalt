@@ -39,16 +39,16 @@ void Camera::transform( void )
 	
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
-	glRotatef( pitch * 180.0 / 3.14159, 1.0, 0.0, 0.0 );
-	glRotatef(   yaw * 180.0 / 3.14159, 0.0, 1.0, 0.0 );
-	glRotatef(  roll * 180.0 / 3.14159, 0.0, 0.0, 1.0 );
+	glRotatef( pitch * 180.0f / 3.14159f, 1.0f, 0.0f, 0.0f );
+	glRotatef(   yaw * 180.0f / 3.14159f, 0.0f, 1.0f, 0.0f );
+	glRotatef(  roll * 180.0f / 3.14159f, 0.0f, 0.0f, 1.0f );
 	glTranslatef( -x, -y, -z );
 };
 
 void Camera::update( Input& input )
 {
-	const float SPEED = 0.003;
-	const float ROT_SPEED = 0.001;
+	const float SPEED = 0.03f;
+	const float ROT_SPEED = 0.001f;
 
 	if ( input.keyDown( DIK_W ) )
 	{

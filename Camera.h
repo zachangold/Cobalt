@@ -17,6 +17,9 @@ public:
 	Camera( Mode mode );
 	~Camera( void );
 
+	float getX( void ) { return x; };
+	float getY( void ) { return y; };
+	float getZ( void ) { return z; };
 
 	void transform( void );
 	void update( Input& input );

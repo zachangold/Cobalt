@@ -48,29 +48,59 @@ void Video::init( void )
 
 	glColor4f( 1.0, 1.0, 1.0, 1.0 );
 	//glEnable( GL_CULL_FACE );
-	//glFrontFace( GL_CW );
+	glFrontFace( GL_CW );
 	glEnable( GL_TEXTURE_2D );
 	glEnable( GL_DEPTH_TEST );
 
+	GLfloat mat_specular[] = { 0.0, 0.0, 0.0, 1.0 };
+	GLfloat mat_shininess[] = { 0.0 };
+	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+	GLfloat light_diffuse[] = { 0.2, 0.2, 0.2, 1.0 };
+	GLfloat light_specular[] = { 0.0, 0.0, 0.0, 1.0 };
+	glClearColor (0.0, 0.0, 0.0, 0.0);
+	glShadeModel (GL_SMOOTH);
+
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_DEPTH_TEST);
 };
 
 //#define STRESS_TEST
-#define VBO_RENDER
+//#define VBO_RENDER
 
 void Video::render( void )
 {
 	glClear( GL_COLOR_BUFFER_BIT );
 	glClear( GL_DEPTH_BUFFER_BIT );
 
-	currentCam.transform();
-
 	//glDisable( GL_TEXTURE_2D );
 	
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-	glEnable( GL_TEXTURE_2D );
+	GLfloat lightPos[ 4 ] = { currentCam.getX(), currentCam.getY(), currentCam.getZ(), 0.0f };
+	/*
+	glDisable( GL_LIGHTING );
 	glPushMatrix();
+		currentCam.transform();
+		glTranslatef( lightPos[ 0 ], lightPos[ 1 ], lightPos[ 2 ] );
+		model->getVBO().draw();
+	glPopMatrix();
+	*/
+
+	glEnable( GL_LIGHTING );
+	glPushMatrix();
+		currentCam.transform();
 		glScalef( 0.01f, 0.01f, 0.01f );
+		//GLfloat lightPos[ 3 ] = { 0.0f, 1.0f, 0.0f };
+		glLightfv( GL_LIGHT0, GL_POSITION, lightPos );
+
 		map.draw( currentCam );
 	glPopMatrix();
 
@@ -82,6 +112,7 @@ void Video::render( void )
 	 * STRESS VBO		- ~420 fps
 	 * STRESS NO BUFFER - ~15 fps
 	 */
+	/*
 	glEnable( GL_TEXTURE_2D );
 	texture.setCurrent();
 
@@ -114,4 +145,5 @@ void Video::render( void )
 		}
 	}
 #endif
+	*/
 };

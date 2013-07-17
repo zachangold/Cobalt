@@ -11,19 +11,19 @@
 #include "IndexBuffer.h"
 #include "Texture.h"
 
-#define BSP_ENTITY_LUMP         0  // MAP entity text buffer
-#define BSP_PLANE_LUMP          1  // Plane array
-#define BSP_VERTEX_LUMP         2  // Vertex array
-#define BSP_VISIBILITY_LUMP     3  // Compressed PVS data and directory for all clusters
-#define BSP_NODE_LUMP           4  // Internal node array for the BSP tree
-#define BSP_TEX_INFO_LUMP       5  // Face texture application array
-#define BSP_FACE_LUMP           6  // Face array
-#define BSP_LIGHTMAP_LUMP       7  // Lightmaps
-#define BSP_LEAF_LUMP           8  // Internal leaf array of the BSP tree
-#define BSP_LEAF_FACE_LUMP      9  // Index lookup table for referencing the face array from a leaf
+ #define BSP_ENTITY_LUMP         0  // MAP entity text buffer
+ #define BSP_PLANE_LUMP          1  // Plane array
+  #define BSP_VERTEX_LUMP         2  // Vertex array
+ #define BSP_VISIBILITY_LUMP     3  // Compressed PVS data and directory for all clusters
+ #define BSP_NODE_LUMP           4  // Internal node array for the BSP tree
+ #define BSP_TEX_INFO_LUMP       5  // Face texture application array
+ #define BSP_FACE_LUMP           6  // Face array
+ #define BSP_LIGHTMAP_LUMP       7  // Lightmaps
+ #define BSP_LEAF_LUMP           8  // Internal leaf array of the BSP tree
+ #define BSP_LEAF_FACE_LUMP      9  // Index lookup table for referencing the face array from a leaf
 #define BSP_LEAF_BRUSH_LUMP    10 // ?
-#define BSP_EDGE_LUMP          11 // Edge array
-#define BSP_FACE_EDGE_LUMP     12 // Index lookup table for referencing the edge array from a face
+  #define BSP_EDGE_LUMP          11 // Edge array
+  #define BSP_FACE_EDGE_LUMP     12 // Index lookup table for referencing the edge array from a face
 #define BSP_MODEL_LUMP         13 // ?
 #define BSP_BRUSH_LUMP         14 // ?
 #define BSP_BRUSH_SIDE_LUMP    15 // ?
@@ -49,6 +49,14 @@ typedef struct Point3f
 		rtn.y = z * rhs.x - x * rhs.z;
 		rtn.z = x * rhs.y - y * rhs.x;
 		return rtn;
+	};
+
+	void normalize( void )
+	{
+		int mag = sqrt( x * x + y * y + z * z );
+		x /= mag;
+		y /= mag;
+		z /= mag;
 	};
 } Point3f;
 
@@ -135,6 +143,7 @@ private:
 	BSPHeader header;
 
 	VertexBuffer vBuffer;
+	VertexBuffer normalLineBuffer;
 	IndexBuffer iBuffer;
 
 	typedef struct

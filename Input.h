@@ -1,6 +1,7 @@
 #ifndef InputH
 #define InputH
 
+#define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
 #define DIMOUSE_LEFTBUTTON   0

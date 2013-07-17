@@ -24,7 +24,7 @@ public:
 	
 	static void deleteAll( void )
 	{
-		for ( int i = 0; i < loaded.size(); ++i )
+		for ( size_t i = 0; i < loaded.size(); ++i )
 		{
 			delete loaded[ i ];
 		}
