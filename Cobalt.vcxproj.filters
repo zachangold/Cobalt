@@ -31,6 +31,9 @@
     <Filter Include="Header Files\Map">
       <UniqueIdentifier>{e82b6adf-9163-49c0-a621-ceacddfe0f3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Video\Shaders">
+      <UniqueIdentifier>{57c23a78-2f87-480c-9062-cbaef8b2637e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="startup.cpp">
@@ -66,9 +69,6 @@
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -76,6 +76,15 @@
       <Filter>Source Files\Map</Filter>
     </ClCompile>
     <ClCompile Include="IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="Program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,5 +137,19 @@
     <ClInclude Include="IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="vertex_shader.glsl">
+      <Filter>Source Files\Video\Shaders</Filter>
+    </None>
+    <None Include="fragment_shader.glsl">
+      <Filter>Source Files\Video\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

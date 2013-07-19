@@ -9,6 +9,16 @@ PFNGLGETBUFFERPARAMETERIVPROC  pglGetBufferParameteriv = 0;   // return various 
 PFNGLMAPBUFFERPROC             pglMapBuffer = 0;              // map VBO procedure
 PFNGLUNMAPBUFFERPROC           pglUnmapBuffer = 0;            // unmap VBO procedure
 
+PFNGLCREATESHADERPROC          glCreateShader = 0;
+PFNGLSHADERSOURCEPROC          glShaderSource = 0;
+PFNGLCOMPILESHADERPROC         glCompileShader = 0;
+
+PFNGLCREATEPROGRAMPROC glCreateProgram = 0;
+PFNGLATTACHSHADERPROC glAttachShader = 0;
+PFNGLDETACHSHADERPROC glDetachShader = 0;
+PFNGLLINKPROGRAMPROC glLinkProgram = 0;
+PFNGLUSEPROGRAMPROC glUseProgram = 0;
+
 
 Video::Video( Window &_window ) : window( _window ), currentCam( defaultCam )
 {
@@ -42,6 +52,16 @@ void Video::init( void )
     glMapBuffer = ( PFNGLMAPBUFFERPROC ) wglGetProcAddress( "glMapBuffer" );
     glUnmapBuffer = ( PFNGLUNMAPBUFFERPROC ) wglGetProcAddress( "glUnmapBuffer" );
 
+	glCreateShader = ( PFNGLCREATESHADERPROC ) wglGetProcAddress( "glCreateShader" );
+	glShaderSource = ( PFNGLSHADERSOURCEPROC ) wglGetProcAddress( "glShaderSource" );
+	glCompileShader = ( PFNGLCOMPILESHADERPROC ) wglGetProcAddress( "glCompileShader" );
+
+	glCreateProgram = ( PFNGLCREATEPROGRAMPROC ) wglGetProcAddress( "glCreateProgram" );
+	glAttachShader = ( PFNGLATTACHSHADERPROC ) wglGetProcAddress( "glAttachShader" );
+	glDetachShader = ( PFNGLDETACHSHADERPROC ) wglGetProcAddress( "glDetachShader" );
+	glLinkProgram = ( PFNGLLINKPROGRAMPROC ) wglGetProcAddress( "glLinkProgram" );
+	glUseProgram = ( PFNGLUSEPROGRAMPROC ) wglGetProcAddress( "glUseProgram" );
+
 	texture.load( "mat/error.bmp" );
 	//texture.load( "mat/Q2/models/monsters/tank/skin.pcx" );
 	map.load( "mat/Q2/maps/base1.bsp" );
@@ -70,6 +90,14 @@ void Video::init( void )
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_DEPTH_TEST);
+
+	vertexShader.create( GL_VERTEX_SHADER, "vertex_shader.glsl" );
+	fragmentShader.create( GL_FRAGMENT_SHADER, "fragment_shader.glsl" );
+	prog.create();
+	prog.attachShader( vertexShader );
+	prog.attachShader( fragmentShader );
+	prog.link();
+	prog.use();
 };
 
 //#define STRESS_TEST

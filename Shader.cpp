@@ -7,7 +7,7 @@ Shader::Shader( void )
 };
 
 
-Shader::~Shader(void)
+Shader::~Shader( void )
 {
 
 };

@@ -10,6 +10,9 @@ using namespace std;
 #include "VertexBuffer.h"
 #include "BSPMap.h"
 
+#include "Program.h"
+#include "Shader.h"
+
 class Video
 {
 public:
@@ -37,6 +40,9 @@ private:
 	Camera &currentCam;
 	Camera  defaultCam;
 
+	Program prog;
+	Shader vertexShader;
+	Shader fragmentShader;
 };
 
 #endif /* VideoH */
