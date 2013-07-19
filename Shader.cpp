@@ -3,11 +3,11 @@
 
 Shader::Shader( void )
 {
-
+	handle = 0xFFFFFFFF;
 };
 
 
 Shader::~Shader( void )
 {
-
+	destroy();
 };

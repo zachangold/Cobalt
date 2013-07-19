@@ -88,9 +88,9 @@ void BSPMap::load( string fileName )
 		armA.y = vtxArray[ polyEdges[ 1 ].p1 ].z - vtxArray[ polyEdges[ 0 ].p1 ].z;
 		armA.z = vtxArray[ polyEdges[ 1 ].p1 ].x - vtxArray[ polyEdges[ 0 ].p1 ].x;
 
-		armB.x = vtxArray[ polyEdges[ 2 ].p1 ].y - vtxArray[ polyEdges[ 0 ].p1 ].y;
-		armB.y = vtxArray[ polyEdges[ 2 ].p1 ].z - vtxArray[ polyEdges[ 0 ].p1 ].z;
-		armB.z = vtxArray[ polyEdges[ 2 ].p1 ].x - vtxArray[ polyEdges[ 0 ].p1 ].x;
+		armB.x = vtxArray[ polyEdges[ polyEdges.size() - 1 ].p1 ].y - vtxArray[ polyEdges[ 0 ].p1 ].y;
+		armB.y = vtxArray[ polyEdges[ polyEdges.size() - 1 ].p1 ].z - vtxArray[ polyEdges[ 0 ].p1 ].z;
+		armB.z = vtxArray[ polyEdges[ polyEdges.size() - 1 ].p1 ].x - vtxArray[ polyEdges[ 0 ].p1 ].x;
 
 		surfaceNormal = armB.cross( armA );
 		surfaceNormal.normalize();
@@ -166,7 +166,7 @@ void BSPMap::load( string fileName )
 
 void BSPMap::draw( Camera &camera )
 {
-	normalLineBuffer.draw();
+	//normalLineBuffer.draw();
 	vBuffer.bind();
 	//iBuffer.draw();
 

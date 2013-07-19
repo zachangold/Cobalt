@@ -15,6 +15,7 @@ extern PFNGLATTACHSHADERPROC glAttachShader;
 extern PFNGLDETACHSHADERPROC glDetachShader;
 extern PFNGLLINKPROGRAMPROC glLinkProgram;
 extern PFNGLUSEPROGRAMPROC glUseProgram;
+extern PFNGLUSEPROGRAMPROC glDeleteProgram;
 
 
 
@@ -47,6 +48,11 @@ public:
 	void use( void )
 	{
 		glUseProgram( handle );
+	};
+
+	void destroy( void )
+	{
+		glDeleteProgram( handle );
 	};
 
 private:

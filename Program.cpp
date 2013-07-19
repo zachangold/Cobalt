@@ -9,6 +9,6 @@ Program::Program( void )
 
 Program::~Program( void )
 {
-
+	destroy();
 };
 

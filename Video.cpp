@@ -18,7 +18,8 @@ PFNGLATTACHSHADERPROC glAttachShader = 0;
 PFNGLDETACHSHADERPROC glDetachShader = 0;
 PFNGLLINKPROGRAMPROC glLinkProgram = 0;
 PFNGLUSEPROGRAMPROC glUseProgram = 0;
-
+PFNGLDELETEPROGRAMPROC glDeleteProgram = 0;
+PFNGLDELETESHADERPROC glDeleteShader = 0;
 
 Video::Video( Window &_window ) : window( _window ), currentCam( defaultCam )
 {
@@ -62,6 +63,9 @@ void Video::init( void )
 	glLinkProgram = ( PFNGLLINKPROGRAMPROC ) wglGetProcAddress( "glLinkProgram" );
 	glUseProgram = ( PFNGLUSEPROGRAMPROC ) wglGetProcAddress( "glUseProgram" );
 
+	glDeleteProgram = ( PFNGLDELETEPROGRAMPROC ) wglGetProcAddress( "glDeleteProgram" );
+	glDeleteShader = ( PFNGLDELETESHADERPROC ) wglGetProcAddress( "glDeleteShader" );
+
 	texture.load( "mat/error.bmp" );
 	//texture.load( "mat/Q2/models/monsters/tank/skin.pcx" );
 	map.load( "mat/Q2/maps/base1.bsp" );
@@ -98,6 +102,8 @@ void Video::init( void )
 	prog.attachShader( fragmentShader );
 	prog.link();
 	prog.use();
+	prog.detachShader( vertexShader );
+	prog.detachShader( fragmentShader );
 };
 
 //#define STRESS_TEST
@@ -123,11 +129,11 @@ void Video::render( void )
 	*/
 
 	glEnable( GL_LIGHTING );
+	glLightfv( GL_LIGHT0, GL_POSITION, lightPos );
 	glPushMatrix();
 		currentCam.transform();
 		glScalef( 0.01f, 0.01f, 0.01f );
 		//GLfloat lightPos[ 3 ] = { 0.0f, 1.0f, 0.0f };
-		glLightfv( GL_LIGHT0, GL_POSITION, lightPos );
 
 		map.draw( currentCam );
 	glPopMatrix();

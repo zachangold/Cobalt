@@ -37,12 +37,12 @@ void Camera::transform( void )
 	glLoadIdentity();
 	gluPerspective( 60.0, 4.0/3.0, 0.1, 100.0 );
 	
-	glMatrixMode( GL_MODELVIEW );
-	glLoadIdentity();
 	glRotatef( pitch * 180.0f / 3.14159f, 1.0f, 0.0f, 0.0f );
 	glRotatef(   yaw * 180.0f / 3.14159f, 0.0f, 1.0f, 0.0f );
 	glRotatef(  roll * 180.0f / 3.14159f, 0.0f, 0.0f, 1.0f );
 	glTranslatef( -x, -y, -z );
+
+	glMatrixMode( GL_MODELVIEW );
 };
 
 void Camera::update( Input& input )

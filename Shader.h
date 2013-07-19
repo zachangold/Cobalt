@@ -13,6 +13,7 @@ using namespace std;
 extern PFNGLCREATESHADERPROC            glCreateShader;
 extern PFNGLSHADERSOURCEPROC            glShaderSource;
 extern PFNGLCOMPILESHADERPROC           glCompileShader;
+extern PFNGLDELETESHADERPROC            glDeleteShader;
 
 class Shader
 {
@@ -22,6 +23,8 @@ public:
 	
 	void create( GLenum shaderType, string shaderFile )
 	{
+		destroy();
+
 		ifstream inFile( shaderFile, fstream::ate | fstream::in );
 		int fileLen = inFile.tellg();
 		inFile.seekg( fstream::beg );
@@ -35,7 +38,14 @@ public:
 		delete[] shaderCode;
 	};
 
-
+	void destroy( void )
+	{
+		if ( handle != 0xFFFFFFFF )
+		{
+			glDeleteShader( handle );
+			handle = 0xFFFFFFFF;
+		}
+	};
 
 	GLuint getHandle( void )
 	{
