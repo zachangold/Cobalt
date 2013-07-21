@@ -21,6 +21,13 @@ PFNGLUSEPROGRAMPROC glUseProgram = 0;
 PFNGLDELETEPROGRAMPROC glDeleteProgram = 0;
 PFNGLDELETESHADERPROC glDeleteShader = 0;
 
+PFNGLACTIVETEXTUREPROC glActiveTexture = 0;
+PFNGLCLIENTACTIVETEXTUREPROC glClientActiveTexture = 0;
+
+PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation = 0;
+PFNGLUNIFORM1IPROC glUniform1i = 0;
+
+
 Video::Video( Window &_window ) : window( _window ), currentCam( defaultCam )
 {
 	model = NULL;
@@ -66,12 +73,18 @@ void Video::init( void )
 	glDeleteProgram = ( PFNGLDELETEPROGRAMPROC ) wglGetProcAddress( "glDeleteProgram" );
 	glDeleteShader = ( PFNGLDELETESHADERPROC ) wglGetProcAddress( "glDeleteShader" );
 
+	glActiveTexture = ( PFNGLACTIVETEXTUREPROC ) wglGetProcAddress( "glActiveTexture" );
+	glClientActiveTexture = ( PFNGLCLIENTACTIVETEXTUREPROC ) wglGetProcAddress( "glClientActiveTexture" );
+
+	glGetUniformLocation = ( PFNGLGETUNIFORMLOCATIONPROC ) wglGetProcAddress( "glGetUniformLocation" );
+	glUniform1i = ( PFNGLUNIFORM1IPROC ) wglGetProcAddress( "glUniform1i" );
+
 	texture.load( "mat/error.bmp" );
 	//texture.load( "mat/Q2/models/monsters/tank/skin.pcx" );
 	map.load( "mat/Q2/maps/base1.bsp" );
 
 	glColor4f( 1.0, 1.0, 1.0, 1.0 );
-	//glEnable( GL_CULL_FACE );
+	glEnable( GL_CULL_FACE );
 	glFrontFace( GL_CW );
 	glEnable( GL_TEXTURE_2D );
 	glEnable( GL_DEPTH_TEST );
@@ -104,6 +117,12 @@ void Video::init( void )
 	prog.use();
 	prog.detachShader( vertexShader );
 	prog.detachShader( fragmentShader );
+
+	int loc = glGetUniformLocation( prog.getHandle(), "texture1" );
+	glUniform1i( loc, 0 );
+
+	loc = glGetUniformLocation( prog.getHandle(), "textureLightmap" );
+	glUniform1i( loc, 1 );
 };
 
 //#define STRESS_TEST
@@ -118,7 +137,7 @@ void Video::render( void )
 	
 	//glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-	GLfloat lightPos[ 4 ] = { currentCam.getX(), currentCam.getY(), currentCam.getZ(), 0.0f };
+	GLfloat lightPos[ 4 ] = { currentCam.getPosition().x, currentCam.getPosition().y, currentCam.getPosition().z, 0.0f };
 	/*
 	glDisable( GL_LIGHTING );
 	glPushMatrix();

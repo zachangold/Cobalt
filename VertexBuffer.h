@@ -16,6 +16,9 @@ extern PFNGLGETBUFFERPARAMETERIVPROC  pglGetBufferParameteriv;   // return vario
 extern PFNGLMAPBUFFERPROC             pglMapBuffer;              // map VBO procedure
 extern PFNGLUNMAPBUFFERPROC           pglUnmapBuffer;            // unmap VBO procedure
 
+extern PFNGLACTIVETEXTUREPROC		  glActiveTexture;
+extern PFNGLCLIENTACTIVETEXTUREPROC   glClientActiveTexture;
+
 #define glGenBuffers           pglGenBuffers
 #define glBindBuffer           pglBindBuffer
 #define glBufferData           pglBufferData

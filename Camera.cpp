@@ -6,23 +6,11 @@
 Camera::Camera( void )
 {
 	mode = GHOST;
-	x = 0.0f;
-	y = 0.0f;
-	z = 0.0f;
-	pitch = 0.0f;
-	yaw = 0.0f;
-	roll = 0.0f;
 };
 
 Camera::Camera( Mode mode )
 {
 	this->mode = mode;
-	x = 0.0f;
-	y = 0.0f;
-	z = 0.0f;
-	pitch = 0.0f;
-	yaw = 0.0f;
-	roll = 0.0f;
 };
 
 Camera::~Camera( void )
@@ -37,10 +25,10 @@ void Camera::transform( void )
 	glLoadIdentity();
 	gluPerspective( 60.0, 4.0/3.0, 0.1, 100.0 );
 	
-	glRotatef( pitch * 180.0f / 3.14159f, 1.0f, 0.0f, 0.0f );
-	glRotatef(   yaw * 180.0f / 3.14159f, 0.0f, 1.0f, 0.0f );
-	glRotatef(  roll * 180.0f / 3.14159f, 0.0f, 0.0f, 1.0f );
-	glTranslatef( -x, -y, -z );
+	glRotatef( rotation.x * 180.0f / 3.14159f, 1.0f, 0.0f, 0.0f );
+	glRotatef( rotation.y * 180.0f / 3.14159f, 0.0f, 1.0f, 0.0f );
+	glRotatef( rotation.z * 180.0f / 3.14159f, 0.0f, 0.0f, 1.0f );
+	glTranslatef( -position.x, -position.y, -position.z );
 
 	glMatrixMode( GL_MODELVIEW );
 };
@@ -52,40 +40,40 @@ void Camera::update( Input& input )
 
 	if ( input.keyDown( DIK_W ) )
 	{
-		x += SPEED * sin( yaw ) * cos( pitch );
-		y -= SPEED * sin( pitch );
-		z -= SPEED * cos( yaw ) * cos( pitch );
+		position.x += SPEED * sin( rotation.y ) * cos( rotation.x );
+		position.y -= SPEED * sin( rotation.x );
+		position.z -= SPEED * cos( rotation.y ) * cos( rotation.x );
 	}
 	if ( input.keyDown( DIK_S ) )
 	{
-		x -= SPEED * sin( yaw ) * cos( pitch );
-		y += SPEED * sin( pitch );
-		z += SPEED * cos( yaw ) * cos( pitch );
+		position.x -= SPEED * sin( rotation.y ) * cos( rotation.x );
+		position.y += SPEED * sin( rotation.x );
+		position.z += SPEED * cos( rotation.y ) * cos( rotation.x );
 	}
 	if ( input.keyDown( DIK_A ) )
 	{
-		x -= SPEED * cos( yaw );
-		z -= SPEED * sin( yaw );
+		position.x -= SPEED * cos( rotation.y );
+		position.z -= SPEED * sin( rotation.y );
 	}
 	if ( input.keyDown( DIK_D ) )
 	{
-		x += SPEED * cos( yaw );
-		z += SPEED * sin( yaw );
+		position.x += SPEED * cos( rotation.y );
+		position.z += SPEED * sin( rotation.y );
 	}
 	if ( input.keyDown( DIK_SPACE ) )
 	{
-		y += SPEED;
+		position.y += SPEED;
 	}
 	if ( input.keyDown( DIK_LCONTROL ) )
 	{
-		y -= SPEED;
+		position.y -= SPEED;
 	}
 
-	yaw += input.getRelX() * input.getSensitivity();
-	pitch += input.getRelY() * input.getSensitivity();
+	rotation.y += input.getRelX() * input.getSensitivity();
+	rotation.x += input.getRelY() * input.getSensitivity();
 	if ( input.buttonDown( DIMOUSE_LEFTBUTTON ) )
 	{
-		pitch = 0.0f;
-		yaw = 0.0f;
+		rotation.x = 0.0f;
+		rotation.y = 0.0f;
 	}
 };

@@ -43,7 +43,9 @@ void VertexBuffer::draw( void )
 
 	glBindBuffer( GL_ARRAY_BUFFER, vbId );
 	glEnableClientState( GL_VERTEX_ARRAY );
+	
 	glInterleavedArrays( format, 0, NULL );
+
 	glDrawArrays( GL_LINES, 0, nVertices );
 	glDisableClientState( GL_VERTEX_ARRAY );
 
@@ -55,9 +57,21 @@ void VertexBuffer::draw( void )
 
 void VertexBuffer::bind( void )
 {
-	glBindBuffer( GL_ARRAY_BUFFER, vbId );
-	glInterleavedArrays( format, 0, NULL );
+	glEnable( GL_VERTEX_ARRAY );
+	glEnable( GL_NORMAL_ARRAY );
 
+	glBindBuffer( GL_ARRAY_BUFFER, vbId );
+	//glInterleavedArrays( format, 0, NULL );
+	glVertexPointer( 3, GL_FLOAT, 40, ( const GLvoid * ) 28 );
+	glNormalPointer( GL_FLOAT, 40, ( const GLvoid * ) 16 );
+
+	glClientActiveTexture( GL_TEXTURE0 );
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	glTexCoordPointer( 2, GL_FLOAT, 40, ( const GLvoid * ) 0 );
+
+	glClientActiveTexture( GL_TEXTURE1 );
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	glTexCoordPointer( 2, GL_FLOAT, 40, ( const GLvoid * ) 8 );
 };
 
 void VertexBuffer::unbind( void )

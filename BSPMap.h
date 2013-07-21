@@ -33,32 +33,16 @@
 
 #define BSP_VERTEX_FORMAT GL_T2F_N3F_V3F
 
+#include "glut/Include/GL/glut.h"
+#include "glext.h"
+
+extern PFNGLACTIVETEXTUREPROC glActiveTexture;
+
 //#pragma pack ( push, 1 )
 
 typedef unsigned __int16 Index16;
 typedef unsigned __int32 Index32;
 
-typedef struct Point3f
-{
-    float x, y, z;
-
-	Point3f cross( Point3f rhs )
-	{
-		Point3f rtn;
-		rtn.x = y * rhs.z - z * rhs.y;
-		rtn.y = z * rhs.x - x * rhs.z;
-		rtn.z = x * rhs.y - y * rhs.x;
-		return rtn;
-	};
-
-	void normalize( void )
-	{
-		int mag = sqrt( x * x + y * y + z * z );
-		x /= mag;
-		y /= mag;
-		z /= mag;
-	};
-} Point3f;
 
 typedef struct
 {
@@ -68,6 +52,7 @@ typedef struct
 typedef struct
 {
 	float u, v;
+	float lmu, lmv;
 	float nx, ny, nz;
 	float x, y, z;
 } BSPVertex;
@@ -140,12 +125,6 @@ public:
 	void draw( Camera &camera );
 
 private:
-	BSPHeader header;
-
-	VertexBuffer vBuffer;
-	VertexBuffer normalLineBuffer;
-	IndexBuffer iBuffer;
-
 	typedef struct
 	{
 		Index32 start, end;
@@ -155,9 +134,21 @@ private:
 	{
 		IndexRange polys;
 		TextureHandle tex;
+		TextureHandle lightmap;
+
+		// These are for software backface culling (temporary)
+		Point3f normal;
+		Point3f firstVertex;
 	} Surface;
 
+	BSPHeader header;
+
+	VertexBuffer vBuffer;
+	VertexBuffer normalLineBuffer;
+	IndexBuffer iBuffer;
+
 	vector< Surface > surfaces;
+
 };
 
 #endif /* BSPMapH */

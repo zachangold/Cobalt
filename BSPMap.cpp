@@ -95,6 +95,14 @@ void BSPMap::load( string fileName )
 		surfaceNormal = armB.cross( armA );
 		surfaceNormal.normalize();
 
+		s.normal = surfaceNormal;
+
+		float minu = +10000.0, minv = +10000.0;
+		float maxu = -10000.0, maxv = -10000.0;
+
+		s.firstVertex.x = vtxArray[ polyEdges[ 0 ].p1 ].y;
+		s.firstVertex.y = vtxArray[ polyEdges[ 0 ].p1 ].z;
+		s.firstVertex.z = vtxArray[ polyEdges[ 0 ].p1 ].x;
 
 		// Add the polygon's vertices
 		for ( size_t d = 0; d < polyEdges.size(); ++d )
@@ -127,12 +135,45 @@ void BSPMap::load( string fileName )
 
 
 			// Calculate texture coordinates here
-			vtx.u = ( vtx.z * texInfo.u_axis.x + vtx.x * texInfo.u_axis.y + vtx.y * texInfo.u_axis.z + texInfo.u_offset ) / s.tex.getWidth();
-			vtx.v = ( vtx.z * texInfo.v_axis.x + vtx.x * texInfo.v_axis.y + vtx.y * texInfo.v_axis.z + texInfo.v_offset ) / s.tex.getHeight();
+			vtx.u = ( vtx.z * texInfo.u_axis.x + vtx.x * texInfo.u_axis.y + vtx.y * texInfo.u_axis.z + texInfo.u_offset ) / (float) s.tex.getWidth();
+			vtx.v = ( vtx.z * texInfo.v_axis.x + vtx.x * texInfo.v_axis.y + vtx.y * texInfo.v_axis.z + texInfo.v_offset ) / (float) s.tex.getHeight();
+
+			if ( vtx.z * texInfo.u_axis.x + vtx.x * texInfo.u_axis.y + vtx.y * texInfo.u_axis.z + texInfo.u_offset > maxu )
+			{
+				maxu = vtx.z * texInfo.u_axis.x + vtx.x * texInfo.u_axis.y + vtx.y * texInfo.u_axis.z + texInfo.u_offset;
+			}
+			if ( vtx.z * texInfo.v_axis.x + vtx.x * texInfo.v_axis.y + vtx.y * texInfo.v_axis.z + texInfo.v_offset > maxv )
+			{
+				maxv = vtx.z * texInfo.v_axis.x + vtx.x * texInfo.v_axis.y + vtx.y * texInfo.v_axis.z + texInfo.v_offset;
+			}
+
+			if ( vtx.z * texInfo.u_axis.x + vtx.x * texInfo.u_axis.y + vtx.y * texInfo.u_axis.z + texInfo.u_offset < minu )
+			{
+				minu = vtx.z * texInfo.u_axis.x + vtx.x * texInfo.u_axis.y + vtx.y * texInfo.u_axis.z + texInfo.u_offset;
+			}
+			if ( vtx.z * texInfo.v_axis.x + vtx.x * texInfo.v_axis.y + vtx.y * texInfo.v_axis.z + texInfo.v_offset < minv )
+			{
+				minv = vtx.z * texInfo.v_axis.x + vtx.x * texInfo.v_axis.y + vtx.y * texInfo.v_axis.z + texInfo.v_offset;
+			}
 
 			// Add the vertex to the end of the vertex buffer
 			vertices.push_back( vtx );
 		}
+
+		int lmw = ceil( maxu / 16 ) - floor( minu / 16 ) + 1;
+		int lmh = ceil( maxv / 16 ) - floor( minv / 16 ) + 1;
+		s.lightmap.loadLightmap( lmw, lmh, &fileData[ header.lump[ BSP_LIGHTMAP_LUMP ].offset + faceArray[ i ].lightmapOffset ] );
+
+		// generate the texture coordinates for the lightmaps
+		for ( int v = vertices.size() - polyEdges.size(); v < vertices.size(); ++v )
+		{
+			//vertices[ v ].lmu = ( vertices[ v ].z * texInfo.u_axis.x + vertices[ v ].x * texInfo.u_axis.y + vertices[ v ].y * texInfo.u_axis.z + texInfo.u_offset ) / (float) s.tex.getWidth();
+			//vertices[ v ].lmv = ( vertices[ v ].z * texInfo.v_axis.x + vertices[ v ].x * texInfo.v_axis.y + vertices[ v ].y * texInfo.v_axis.z + texInfo.v_offset ) / (float) s.tex.getHeight();
+
+			vertices[ v ].lmu = ( vertices[ v ].u * ( ( float ) s.tex.getWidth() ) - minu ) / ( maxu - minu );
+			vertices[ v ].lmv = ( vertices[ v ].v * ( ( float ) s.tex.getHeight() ) - minv ) / ( maxv - minv );
+		}
+
 
 		// Set up the indices for the triangles
 		for ( size_t idx = vertices.size() - polyEdges.size() + 2; idx < vertices.size(); ++idx )
@@ -172,7 +213,12 @@ void BSPMap::draw( Camera &camera )
 
 	for ( size_t s = 0; s < surfaces.size(); ++s )
 	{
+		if ( ( camera.getPosition() - surfaces[ s ].firstVertex * 0.01f ).dot( surfaces[ s ].normal ) < 0 ) continue;
+
+		glActiveTexture( GL_TEXTURE0 );
 		surfaces[ s ].tex.setCurrent();
+		glActiveTexture( GL_TEXTURE1 );
+		surfaces[ s ].lightmap.setCurrent();
 		iBuffer.draw( surfaces[ s ].polys.start, surfaces[ s ].polys.end );
 	}
 

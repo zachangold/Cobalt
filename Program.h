@@ -55,6 +55,8 @@ public:
 		glDeleteProgram( handle );
 	};
 
+	GLuint getHandle( void ) { return handle; };
+
 private:
 	GLuint handle;
 
