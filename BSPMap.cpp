@@ -28,18 +28,6 @@ void BSPMap::load( string fileName )
 	// read in the header
 	memcpy( &header, &fileData[ 0 ], sizeof( BSPHeader ) );
 
-	/*
-	Point3f *firstVertex = ( Point3f * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ];
-	for ( int v = 0; v < header.lump[ BSP_VERTEX_LUMP ].length / 12; ++v )
-	{
-		float temp = (firstVertex+v)->z;
-		(firstVertex+v)->z = (firstVertex+v)->x;
-		(firstVertex+v)->x = (firstVertex+v)->y;
-		(firstVertex+v)->y = temp;
-	}
-	*/
-
-
 	BSPEdge *edgeArray = ( BSPEdge * ) &fileData[ header.lump[ BSP_EDGE_LUMP ].offset ];
 	Point3f *vtxArray = ( Point3f * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ];
 	BSPFace *faceArray = ( BSPFace * ) &fileData[ header.lump[ BSP_FACE_LUMP ].offset ];
@@ -55,8 +43,6 @@ void BSPMap::load( string fileName )
 
 	// contains a set of vertices for each BSPFace
 	vector< BSPVertex > vertices;
-
-	vector< Point3f > normalLines;
 
 	for ( size_t i = 0; i < header.lump[ BSP_FACE_LUMP ].length / sizeof( BSPFace ); ++i )
 	{
@@ -116,24 +102,6 @@ void BSPMap::load( string fileName )
 			vtx.ny = surfaceNormal.y;
 			vtx.nz = surfaceNormal.z;
 
-			//vtx.nx = 0.0;
-			//vtx.ny = 1.0;
-			//vtx.nz = 0.0;
-
-			Point3f NLINEBASE;
-			NLINEBASE.x = vtx.x;
-			NLINEBASE.y = vtx.y;
-			NLINEBASE.z = vtx.z;
-
-			Point3f NLINEEND;
-			NLINEEND.x = vtx.x + vtx.nx * 10.0;
-			NLINEEND.y = vtx.y + vtx.ny * 10.0;
-			NLINEEND.z = vtx.z + vtx.nz * 10.0;
-
-			normalLines.push_back( NLINEBASE );
-			normalLines.push_back( NLINEEND );
-
-
 			// Calculate texture coordinates here
 			vtx.u = ( vtx.z * texInfo.u_axis.x + vtx.x * texInfo.u_axis.y + vtx.y * texInfo.u_axis.z + texInfo.u_offset ) / (float) s.tex.getWidth();
 			vtx.v = ( vtx.z * texInfo.v_axis.x + vtx.x * texInfo.v_axis.y + vtx.y * texInfo.v_axis.z + texInfo.v_offset ) / (float) s.tex.getHeight();
@@ -167,9 +135,6 @@ void BSPMap::load( string fileName )
 		// generate the texture coordinates for the lightmaps
 		for ( int v = vertices.size() - polyEdges.size(); v < vertices.size(); ++v )
 		{
-			//vertices[ v ].lmu = ( vertices[ v ].z * texInfo.u_axis.x + vertices[ v ].x * texInfo.u_axis.y + vertices[ v ].y * texInfo.u_axis.z + texInfo.u_offset ) / (float) s.tex.getWidth();
-			//vertices[ v ].lmv = ( vertices[ v ].z * texInfo.v_axis.x + vertices[ v ].x * texInfo.v_axis.y + vertices[ v ].y * texInfo.v_axis.z + texInfo.v_offset ) / (float) s.tex.getHeight();
-
 			vertices[ v ].lmu = ( vertices[ v ].u * ( ( float ) s.tex.getWidth() ) - minu ) / ( maxu - minu );
 			vertices[ v ].lmv = ( vertices[ v ].v * ( ( float ) s.tex.getHeight() ) - minv ) / ( maxv - minv );
 		}
@@ -191,15 +156,11 @@ void BSPMap::load( string fileName )
 		surfaces.push_back( s );
 	}
 
-	//vBuffer.load( ( float * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ], 
-	//			  header.lump[ BSP_VERTEX_LUMP ].length / sizeof( Point3f ), sizeof( Point3f ) );
-
-	normalLineBuffer.load( ( float * ) &normalLines[ 0 ], normalLines.size(), sizeof( Point3f ) );
+	//normalLineBuffer.load( ( float * ) &normalLines[ 0 ], normalLines.size(), sizeof( Point3f ) );
 	vBuffer.load( ( float * ) &vertices[ 0 ], vertices.size(), sizeof( BSPVertex ) );
 	iBuffer.load( &triList[ 0 ], triList.size(), sizeof( Index32 ) );
 
-	vBuffer.setFormat( BSP_VERTEX_FORMAT );
-	normalLineBuffer.setFormat( GL_V3F );
+	//normalLineBuffer.setFormat( GL_V3F );
 
 	delete[] fileData;
 };

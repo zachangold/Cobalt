@@ -31,13 +31,6 @@
 #define BSP_AREA_LUMP          17 // ?
 #define BSP_AREA_PORTAL_LUMP   18 // ?
 
-#define BSP_VERTEX_FORMAT GL_T2F_N3F_V3F
-
-#include "glut/Include/GL/glut.h"
-#include "glext.h"
-
-extern PFNGLACTIVETEXTUREPROC glActiveTexture;
-
 //#pragma pack ( push, 1 )
 
 typedef unsigned __int16 Index16;
@@ -111,8 +104,6 @@ typedef struct
     Index32  next_texinfo;
 } BSPTexInfo;
 
-//#pragma pack( pop )
-
 class BSPMap : public Map
 {
 public:
@@ -144,7 +135,7 @@ private:
 	BSPHeader header;
 
 	VertexBuffer vBuffer;
-	VertexBuffer normalLineBuffer;
+	//VertexBuffer normalLineBuffer;
 	IndexBuffer iBuffer;
 
 	vector< Surface > surfaces;

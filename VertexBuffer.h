@@ -4,29 +4,7 @@
 #include <iostream>
 using namespace std;
 
-#include "glut/Include/GL/glut.h"
-#include "glext.h"
-
-extern PFNGLGENBUFFERSPROC            pglGenBuffers;             // VBO Name Generation Procedure
-extern PFNGLBINDBUFFERPROC            pglBindBuffer;             // VBO Bind Procedure
-extern PFNGLBUFFERDATAPROC            pglBufferData;             // VBO Data Loading Procedure
-extern PFNGLBUFFERSUBDATAPROC         pglBufferSubData;          // VBO Sub Data Loading Procedure
-extern PFNGLDELETEBUFFERSPROC         pglDeleteBuffers;          // VBO Deletion Procedure
-extern PFNGLGETBUFFERPARAMETERIVPROC  pglGetBufferParameteriv;   // return various parameters of VBO
-extern PFNGLMAPBUFFERPROC             pglMapBuffer;              // map VBO procedure
-extern PFNGLUNMAPBUFFERPROC           pglUnmapBuffer;            // unmap VBO procedure
-
-extern PFNGLACTIVETEXTUREPROC		  glActiveTexture;
-extern PFNGLCLIENTACTIVETEXTUREPROC   glClientActiveTexture;
-
-#define glGenBuffers           pglGenBuffers
-#define glBindBuffer           pglBindBuffer
-#define glBufferData           pglBufferData
-#define glBufferSubData        pglBufferSubData
-#define glDeleteBuffers        pglDeleteBuffers
-#define glGetBufferParameteriv pglGetBufferParameteriv
-#define glMapBuffer            pglMapBuffer
-#define glUnmapBuffer          pglUnmapBuffer
+#include "GLFunctions.h"
 
 /**
  * An abstraction of the OpenGL Vertex Buffer Object (structure for

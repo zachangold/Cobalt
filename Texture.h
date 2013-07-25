@@ -43,43 +43,7 @@ public:
 	 */
 	void load( string fileName );
 
-	void loadLightmap( int width, int height, char *lightmap )
-	{
-		glGenTextures( 1, &texId );
-		glBindTexture( GL_TEXTURE_2D, texId );
-
-		// select modulate to mix texture with color for shading
-		glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-
-		// when texture area is small, bilinear filter the closest mipmap
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST );
-
-		// when texture area is large, bilinear filter the original
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-
-		// the texture wraps over at the edges (repeat)
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-
-		//GLfloat largest_supported_anisotropy;
-		//glGetFloatv( GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &largest_supported_anisotropy );
-		//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, largest_supported_anisotropy );
-
-		vector< unsigned char > bitmap( width * height * 4 );
-		for ( int p = 0; p < width * height; ++p )
-		{
-			bitmap[ p * 4 + 0 ] = lightmap[ p * 3 + 0 ];
-			bitmap[ p * 4 + 1 ] = lightmap[ p * 3 + 1 ];
-			bitmap[ p * 4 + 2 ] = lightmap[ p * 3 + 2 ];
-			bitmap[ p * 4 + 3 ] = 255;
-		}
-
-		gluBuild2DMipmaps( GL_TEXTURE_2D, 4, width, height, GL_RGBA, GL_UNSIGNED_BYTE, &bitmap[ 0 ] );
-		glBindTexture( GL_TEXTURE_2D, 0 );
-
-		this->width = width;
-		this->height = height;
-	};
+	void loadLightmap( int width, int height, char *lightmap );
 
 	/**
 	 * Deletes the OpenGL texture object if it exists
@@ -157,6 +121,7 @@ public:
 		loadedTextures.push_back( tr );
 		texRefIndex = loadedTextures.size() - 1;
 	};
+
 
 	/**
 	 * Deletes the Texture pointed to by this TextureHandle,

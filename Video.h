@@ -13,6 +13,9 @@ using namespace std;
 #include "Program.h"
 #include "Shader.h"
 
+#include "Light.h"
+#include "Material.h"
+
 class Video
 {
 public:
@@ -43,6 +46,9 @@ private:
 	Program prog;
 	Shader vertexShader;
 	Shader fragmentShader;
+
+	Light light;
+	Material material;
 };
 
 #endif /* VideoH */
