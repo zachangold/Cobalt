@@ -75,6 +75,7 @@
   <ItemGroup>
     <ClCompile Include="BSPMap.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CobaltEngine.cpp" />
     <ClCompile Include="CobaltGame.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GLFunctions.cpp" />
@@ -100,6 +101,7 @@
     <ClInclude Include="BMP.h" />
     <ClInclude Include="BSPMap.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CobaltEngine.h" />
     <ClInclude Include="CobaltGame.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GLFunctions.h" />

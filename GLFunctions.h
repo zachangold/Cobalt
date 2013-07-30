@@ -3,9 +3,11 @@
 
 #include "glut/Include/GL/glut.h"
 #include "glext.h"
+#include "wglext.h"
 
 
-void initGLFunctions( void );
+void loadGLFunctions( void );
+void initGL( void );
 
 
 extern PFNGLGENBUFFERSPROC				glGenBuffers;
@@ -35,6 +37,6 @@ extern PFNGLCLIENTACTIVETEXTUREPROC		glClientActiveTexture;
 extern PFNGLGETUNIFORMLOCATIONPROC		glGetUniformLocation;
 extern PFNGLUNIFORM1IPROC				glUniform1i;
 
-
+extern PFNWGLSWAPINTERVALEXTPROC		wglSwapIntervalEXT;
 
 #endif /* GLFunctionsH */

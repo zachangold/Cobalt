@@ -1,9 +1,5 @@
 #include "GLFunctions.h"
 
-bool load( void **function, const char *functionString )
-{
-	return ( ( *function ) = ( void * ) wglGetProcAddress( functionString ) ) != nullptr;
-};
 
 #define LOAD_FUNCTION( FUNC ) load( ( void ** ) &FUNC, #FUNC )
 
@@ -34,7 +30,14 @@ PFNGLCLIENTACTIVETEXTUREPROC	glClientActiveTexture	= nullptr;
 PFNGLGETUNIFORMLOCATIONPROC		glGetUniformLocation	= nullptr;
 PFNGLUNIFORM1IPROC				glUniform1i				= nullptr;
 
-void initGLFunctions( void )
+PFNWGLSWAPINTERVALEXTPROC 			wglSwapIntervalEXT		= nullptr;
+
+bool load( void **function, const char *functionString )
+{
+	return ( ( *function ) = ( void * ) wglGetProcAddress( functionString ) ) != nullptr;
+};
+
+void loadGLFunctions( void )
 {
 	// Buffer objects
 	LOAD_FUNCTION( glGenBuffers );
@@ -66,5 +69,17 @@ void initGLFunctions( void )
 
 	LOAD_FUNCTION( glGetUniformLocation );
 	LOAD_FUNCTION( glUniform1i );
+
+	LOAD_FUNCTION( wglSwapIntervalEXT );
+};
+
+void initGL( void )
+{
+	glEnable( GL_CULL_FACE );
+	glFrontFace( GL_CW );
+
+	glEnable( GL_TEXTURE_2D );
+	glEnable( GL_DEPTH_TEST );
+	glEnable( GL_LIGHTING );
 
 };

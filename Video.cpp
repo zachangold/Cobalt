@@ -2,14 +2,12 @@
 
 Video::Video( Window &_window ) : window( _window ), currentCam( defaultCam )
 {
-	model = NULL;
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 };
 
 Video::Video( Window &_window, Camera &cam ) : window( _window ), currentCam( cam )
 {
-	model = NULL;
 	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 };
 
@@ -22,17 +20,12 @@ Video::~Video( void )
 
 void Video::init( void )
 {
-    // get pointers to GL functions
-	initGLFunctions();
+    // get pointers to GL functions, set some default OpenGL enables
+	loadGLFunctions();
+	initGL();
 
-	texture.load( "mat/error.bmp" );
 	map.load( "mat/Q2/maps/space.bsp" );
-
-	glColor4f( 1.0, 1.0, 1.0, 1.0 );
-	glEnable( GL_CULL_FACE );
-	glFrontFace( GL_CW );
-	glEnable( GL_TEXTURE_2D );
-	glEnable( GL_DEPTH_TEST );
+	wglSwapIntervalEXT( 1 );
 
 	light.setPosition( Point4f( 1.0, 1.0, 1.0, 0.0 ) );
 	light.setDiffuseColour( Colour4f( 0.2, 0.2, 0.2, 1.0 ) );
@@ -40,8 +33,7 @@ void Video::init( void )
 
 	material.setSpecularColour( Colour4f( 0.0, 0.0, 0.0, 1.0 ) );
 	material.setShininess( 0.0 );
-
-	glEnable( GL_LIGHTING );
+	
 	glEnable( GL_LIGHT0 );
 
 	vertexShader.create( GL_VERTEX_SHADER, "vertex_shader.glsl" );

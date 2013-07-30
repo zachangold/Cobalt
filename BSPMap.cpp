@@ -97,7 +97,7 @@ void BSPMap::load( string fileName )
 			vtx.x = vtxArray[ polyEdges[ d ].p1 ].y;
 			vtx.y = vtxArray[ polyEdges[ d ].p1 ].z;
 			vtx.z = vtxArray[ polyEdges[ d ].p1 ].x;
-
+			
 			vtx.nx = surfaceNormal.x;
 			vtx.ny = surfaceNormal.y;
 			vtx.nz = surfaceNormal.z;

@@ -33,9 +33,6 @@ public:
 		defaultCam.update( input );
 	};
 
-	Model *model; 
-	Texture texture;
-	BSPMap map;
 
 private:
 	Window &window;
@@ -49,6 +46,8 @@ private:
 
 	Light light;
 	Material material;
+
+	BSPMap map;
 };
 
 #endif /* VideoH */
