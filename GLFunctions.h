@@ -5,8 +5,14 @@
 #include "glext.h"
 #include "wglext.h"
 
+/**
+ * This file and GLFunctions.cpp are here to load in all of openGL's
+ * functions that we need that aren't loaded automatically (because
+ * some of them aren't available in all versions of openGL)
+ */
 
-void loadGLFunctions( void );
+#define INVALID_HANDLE 0xFFFFFFFF
+
 void initGL( void );
 
 

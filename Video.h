@@ -7,8 +7,7 @@ using namespace std;
 #include "Window.h"
 #include "Camera.h"
 #include "Model.h"
-#include "VertexBuffer.h"
-#include "BSPMap.h"
+#include "BSPMapQ2.h"
 
 #include "Program.h"
 #include "Shader.h"
@@ -47,7 +46,7 @@ private:
 	Light light;
 	Material material;
 
-	BSPMap map;
+	Q2::BSPMap map;
 };
 
 #endif /* VideoH */

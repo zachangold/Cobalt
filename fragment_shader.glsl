@@ -12,7 +12,7 @@ void main( void )
 	lightVector /= dist;
 	float lightMultiplier = dot( lightVector, normalize( normal ) ) * attenuationFactor;
 
-	gl_FragColor = lightMultiplier * texture( surfaceTexture, gl_TexCoord[ 0 ] );
-	//gl_FragColor = texture( surfaceTexture, gl_TexCoord[ 0 ] ) * texture( lightmapTexture, gl_TexCoord[ 1 ] ) * 2.0;
+	//gl_FragColor = lightMultiplier * texture( surfaceTexture, gl_TexCoord[ 0 ] );
+	gl_FragColor = texture( surfaceTexture, gl_TexCoord[ 0 ] ) * texture( lightmapTexture, gl_TexCoord[ 1 ] ) * 2.0;
 	//gl_FragColor = texture( surfaceTexture, gl_TexCoord[ 0 ] );
 };

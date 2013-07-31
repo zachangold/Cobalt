@@ -21,10 +21,9 @@ Video::~Video( void )
 void Video::init( void )
 {
     // get pointers to GL functions, set some default OpenGL enables
-	loadGLFunctions();
 	initGL();
 
-	map.load( "mat/Q2/maps/space.bsp" );
+	map.load( "mat/Q2/maps/fact3.bsp" );
 	wglSwapIntervalEXT( 1 );
 
 	light.setPosition( Point4f( 1.0, 1.0, 1.0, 0.0 ) );
@@ -39,18 +38,17 @@ void Video::init( void )
 	vertexShader.create( GL_VERTEX_SHADER, "vertex_shader.glsl" );
 	fragmentShader.create( GL_FRAGMENT_SHADER, "fragment_shader.glsl" );
 	prog.create();
-	prog.attachShader( vertexShader );
-	prog.attachShader( fragmentShader );
+	prog.attach( vertexShader );
+	prog.attach( fragmentShader );
 	prog.link();
 	prog.use();
-	prog.detachShader( vertexShader );
-	prog.detachShader( fragmentShader );
+	
+	// This should probably be done automatically after use() is called on the program
+	prog.detach( vertexShader );
+	prog.detach( fragmentShader );
 
-	int loc = glGetUniformLocation( prog.getHandle(), "surfaceTexture" );
-	glUniform1i( loc, 0 );
-
-	loc = glGetUniformLocation( prog.getHandle(), "lightmapTexture" );
-	glUniform1i( loc, 1 );
+	prog.setUniform( "surfaceTexture", 0 );
+	prog.setUniform( "lightmapTexture", 1 );
 };
 
 

@@ -30,7 +30,7 @@ PFNGLCLIENTACTIVETEXTUREPROC	glClientActiveTexture	= nullptr;
 PFNGLGETUNIFORMLOCATIONPROC		glGetUniformLocation	= nullptr;
 PFNGLUNIFORM1IPROC				glUniform1i				= nullptr;
 
-PFNWGLSWAPINTERVALEXTPROC 			wglSwapIntervalEXT		= nullptr;
+PFNWGLSWAPINTERVALEXTPROC 		wglSwapIntervalEXT		= nullptr;
 
 bool load( void **function, const char *functionString )
 {
@@ -61,20 +61,21 @@ void loadGLFunctions( void )
 	LOAD_FUNCTION( glDetachShader );
 	LOAD_FUNCTION( glLinkProgram );
 	LOAD_FUNCTION( glUseProgram );
-
 	LOAD_FUNCTION( glDeleteProgram );
+	LOAD_FUNCTION( glGetUniformLocation );
+	LOAD_FUNCTION( glUniform1i );
 
 	LOAD_FUNCTION( glActiveTexture );
 	LOAD_FUNCTION( glClientActiveTexture );
 
-	LOAD_FUNCTION( glGetUniformLocation );
-	LOAD_FUNCTION( glUniform1i );
 
 	LOAD_FUNCTION( wglSwapIntervalEXT );
 };
 
 void initGL( void )
 {
+	loadGLFunctions();
+
 	glEnable( GL_CULL_FACE );
 	glFrontFace( GL_CW );
 

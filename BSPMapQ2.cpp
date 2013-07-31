@@ -1,6 +1,8 @@
-#include "BSPMap.h"
+#include "BSPMapQ2.h"
 #include <fstream>
 using namespace std;
+
+using namespace Q2;
 
 BSPMap::BSPMap( void )
 {
@@ -28,15 +30,15 @@ void BSPMap::load( string fileName )
 	// read in the header
 	memcpy( &header, &fileData[ 0 ], sizeof( BSPHeader ) );
 
-	BSPEdge *edgeArray = ( BSPEdge * ) &fileData[ header.lump[ BSP_EDGE_LUMP ].offset ];
-	Point3f *vtxArray = ( Point3f * ) &fileData[ header.lump[ BSP_VERTEX_LUMP ].offset ];
-	BSPFace *faceArray = ( BSPFace * ) &fileData[ header.lump[ BSP_FACE_LUMP ].offset ];
-	__int32 *faceEdgeArray = ( __int32 * ) &fileData[ header.lump[ BSP_FACE_EDGE_LUMP ].offset ];
-	BSPTexInfo *texInfoArray = ( BSPTexInfo * ) &fileData[ header.lump[ BSP_TEX_INFO_LUMP ].offset ];
+	BSPEdge *edgeArray = ( BSPEdge * ) &fileData[ header.lump[ EDGE_LUMP ].offset ];
+	Point3f *vtxArray = ( Point3f * ) &fileData[ header.lump[ VERTEX_LUMP ].offset ];
+	BSPFace *faceArray = ( BSPFace * ) &fileData[ header.lump[ FACE_LUMP ].offset ];
+	__int32 *faceEdgeArray = ( __int32 * ) &fileData[ header.lump[ FACE_EDGE_LUMP ].offset ];
+	BSPTexInfo *texInfoArray = ( BSPTexInfo * ) &fileData[ header.lump[ TEX_INFO_LUMP ].offset ];
 
 
-	int numEdges = header.lump[ BSP_EDGE_LUMP ].length / sizeof( BSPEdge );
-	int numVertices = header.lump[ BSP_VERTEX_LUMP ].length / sizeof( Point3f );
+	int numEdges = header.lump[ EDGE_LUMP ].length / sizeof( BSPEdge );
+	int numVertices = header.lump[ VERTEX_LUMP ].length / sizeof( Point3f );
 
 	// contains indices into vertices
 	vector< Index32 > triList;
@@ -44,7 +46,7 @@ void BSPMap::load( string fileName )
 	// contains a set of vertices for each BSPFace
 	vector< BSPVertex > vertices;
 
-	for ( size_t i = 0; i < header.lump[ BSP_FACE_LUMP ].length / sizeof( BSPFace ); ++i )
+	for ( size_t i = 0; i < header.lump[ FACE_LUMP ].length / sizeof( BSPFace ); ++i )
 	{
 		vector< BSPEdge > polyEdges;
 		BSPTexInfo texInfo = texInfoArray[ faceArray[ i ].texInfoIndex ];
@@ -130,7 +132,7 @@ void BSPMap::load( string fileName )
 
 		int lmw = ceil( maxu / 16 ) - floor( minu / 16 ) + 1;
 		int lmh = ceil( maxv / 16 ) - floor( minv / 16 ) + 1;
-		s.lightmap.loadLightmap( lmw, lmh, &fileData[ header.lump[ BSP_LIGHTMAP_LUMP ].offset + faceArray[ i ].lightmapOffset ] );
+		s.lightmap.loadLightmap( lmw, lmh, &fileData[ header.lump[ LIGHTMAP_LUMP ].offset + faceArray[ i ].lightmapOffset ] );
 
 		// generate the texture coordinates for the lightmaps
 		for ( int v = vertices.size() - polyEdges.size(); v < vertices.size(); ++v )
